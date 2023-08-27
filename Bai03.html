@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html>
+<title>Bài 3: Các khái niệm và thao
+  tác cơ bản trong Node.js và MongoDB</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="w3.css">
+<link rel="stylesheet" href="font.css">
+<link rel="stylesheet" href="font-awesome.min.css">
+<style>
+  .tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+  }
+
+  /* Style the buttons inside the tab */
+  .tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+  }
+
+  /* Change background color of buttons on hover */
+  .tab button:hover {
+    background-color: #ddd;
+  }
+
+  /* Create an active/current tablink class */
+  .tab button.active {
+    background-color: #ccc;
+  }
+
+  /* Style the tab content */
+  .tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+  }
+
+  i {
+    color: yellow;
+  }
+
+  #myBtn {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    z-index: 99;
+    font-size: 18px;
+    border: none;
+    outline: none;
+    background-color: pink;
+    color: black;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 4px;
+  }
+
+  #myBtn:hover {
+    background-color: #555;
+  }
+
+  .w3-main a {
+    background-color: red;
+  }
+
+  .pagination {
+    display: inline-block;
+  }
+
+  .pagination a {
+    color: white;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+    background-color: gray;
+  }
+
+  .pagination a.active {
+    background-color: gray;
+    color: white;
+    border: 1px solid #4CAF50;
+  }
+
+  .pagination a:hover:not(.active) {
+    background-color: #ddd;
+  }
+
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Raleway", sans-serif
+  }
+
+
+  table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  table td,
+  table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  /*
+  #tab tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+*/
+  table tr:hover {
+    background-color: #ddd;
+  }
+
+  table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #04AA6D;
+    color: white;
+  }
+
+  .center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
+
+  .w3-code a {
+    background-color: transparent;
+    text-decoration: none;
+    color: blue;
+  }
+
+  .video-container {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+
+  .video-container::after {
+    padding-top: 56.25%;
+    display: block;
+    content: '';
+  }
+
+  .video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<body class="w3-black w3-content" style="max-width:1600px">
+
+  <!-- Sidebar/menu -->
+  <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+    <div class="w3-container">
+      <a href="#" style="text-decoration: none;" onclick="w3_close()"
+        class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey" title="Đóng"> X </a>
+      <!--<h4><b>Giáo trình</b></h4>-->
+    </div>
+    <div class="w3-bar-block">
+      <a href="Bai01.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài 1: Giới thiệu
+        Node.js (NodeJS) và MongoDB</a>
+
+      <a href="Bai02.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài 2: Viết ứng dụng đầu tiên
+        với Node.js và MongoDB</a>
+
+      <a href="Bai03.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding w3-text-teal">Bài 3: Các khái
+        niệm và thao
+        tác cơ bản trong Node.js và MongoDB</a>
+      <a href="Baitap03.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài tập</a>
+      <a href="Bai04.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài 4: Xây dựng web với nền
+        tảng Express (Express Framework)</a>
+      <a href="Baitap03.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài tập</a>
+      <a href="Baitap04.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài 5: Xây dựng ứng dụng web
+        hướng máy chủ</a>
+      <a href="Baitap03.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài tập</a>
+      <a href="Thamkhao.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài 6: Kiểm thử và triển
+        khai ứng dụng web</a>
+    </div>
+  </nav>
+
+  <!-- Overlay effect when opening sidebar on small screens -->
+  <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer"
+    title="close side menu" id="myOverlay">=</div>
+
+  <!-- !PAGE CONTENT! -->
+  <div class="w3-main" style="margin-left:300px">
+    <button onclick="topFunction()" id="myBtn" title="Go to top">Lên đầu trang</button>
+    <!-- Header -->
+    <header id="portfolio">
+      <!--<a href="#"><img src="/w3images/avatar_g2.jpg" style="width:65px;"
+          class="w3-circle w3-right w3-margin w3-hide-large w3-hover-opacity"></a>-->
+      <span class="w3-button w3-hide-large w3-xxlarge w3-hover-text-grey" onclick="w3_open()">=</span>
+      <div class="w3-container">
+        <h1><b>Bài 3: Các khái niệm và thao
+            tác cơ bản trong Node.js và MongoDB</b></h1>
+        <div class="w3-section w3-bottombar"></div>
+      </div>
+    </header>
+
+    <div class="w3-container w3-padding-large" style="margin-bottom:32px">
+      <div class="w3-center">
+        <div class="pagination">
+          <a href="Bai02.html">Bài trước</a>
+          <a href="Bai04.html">Bài tiếp theo</a>
+        </div>
+      </div>
+      <div class="w3-code notranslate htmlHigh">
+        <h4>Nội dung bài học</h4>
+        <ol>
+          <li><a href="#muc1">Các khái niệm cơ bản trong ngôn ngữ JavaScript hiện đại</a>
+            <ul>
+              <li><a href="#muc1_1">Các khái niệm cơ bản</a>
+              <li><a href="#muc1_2">Lập trình hướng đối tượng</a>
+              <li><a href="#muc1_3">Lập trình không đồng bộ</a>
+            </ul>
+          </li>
+          <li><a href="#muc2">Các khái niệm và thao tác cơ bản trong Node.js</a>
+            <ul>
+              <li><a href="#muc2_1">Mô đun (Module) trong NodeJS</a>
+              <li><a href="#muc2_2">Truyền dữ liệu</a>
+              <li><a href="#muc2_3">Thao tác với tập tin</a>
+              <li><a href="#muc2_4">Thao tác với URL</a>
+              <li><a href="#muc2_5">Các thao tác khác</a>
+            </ul>
+          </li>
+          <li><a href="#muc3">Các khái niệm và thao tác cơ bản MongoDB</a>
+            <ul>
+              <li><a href="#muc3_1">Một số khái niệm cơ bản</a>
+              <li><a href="#muc3_2">Kết nối và tạo cơ sở dữ liệu (Connect, Create Database)</a>
+              <li><a href="#muc3_3">Tạo một bộ sưu tập (Create Collection)</a>
+              <li><a href="#muc3_4">Xóa một bộ sưu tập (Drop Collection)</a>
+              <li><a href="#muc3_5">Chèn tài liệu (Insert document)</a>
+              <li><a href="#muc3_6">Hiển thị tài liệu (Find document)</a>
+              <li><a href="#muc3_7">Lọc tài liệu (Filter document)</a>
+              <li><a href="#muc3_8">Xóa tài liệu (Delete document)</a>
+              <li><a href="#muc3_9">Cập nhật tài liệu (Update document)</a>
+              <li><a href="#muc3_10">Sắp xếp các tài liệu (Sort document)</a>
+              <li><a href="#muc3_11">Kết nối các tài liệu (Join document)</a>
+            </ul>
+          </li>
+          <li><a href="Baitap03.html">Bài tập NodeJS và MongoDB</a></li>
+        </ol>
+      </div>
+      <h2 id="muc1"><b>Các khái niệm cơ bản trong ngôn ngữ JavaScript hiện đại</b></h2>
+      <p>ES5 là đặc tả ngôn ngữ JavaScript được sử dụng phổ biến nhất hiện nay. Cơ bản về JavaScript từ ES5 trở về trước
+        có
+        thể tham khảo tại <a href="https://ngocminhtran.com/javascript-co-ban/">JavaScript cơ bản</a>. Tuy nhiên,
+        nhiều đặc trưng mới được giới thiệu
+        trong các đặc tả ES6, ES7, v.v. Hiểu về các đặc trưng mới trong JavaScript sẽ giúp chúng ta sử dụng các
+        framework
+        như React, Angular, React Native, Node, v.v. một cách hiệu quả.</p>
+      <h4 id="muc1_1"><b>Các khái niệm cơ bản</b></h4>
+      <ul>
+        <li><i>let</i> và <i>const</i>: Trước ES6 (ES2015), khai báo biến trong JS sử dụng từ khóa <i>var</i> và trong
+          ES6 bổ sung thêm hai từ khóa
+          là <i>let</i> và <i>const</i>.
+        <li>Hàm mũi tên (Arrow functions): ES6 giới thiệu cách viết ngắn gọn với hàm bằng cách dùng hàm mũi tên.
+        <li>Toán tử mở rộng (spread operator): Chúng ta có thể mở rộng một mảng, một đối tượng hay một chuỗi bằng toán
+          tử mở
+          rộng, kí hiệu là ... (ba chấm).
+        <li>Khai báo chuỗi: ES2015/ES6 giới thiệu cách khai báo chuỗi mới dùng dấu ` bên cạnh các khai báo chuỗi truyền
+          thống
+          với dấu nháy đơn ' hay nháy kép ".
+      </ul>
+      <p>Chi tiết về các khái niệm có thể tham khảo tại <a
+          href="https://ngocminhtran.com/2020/02/26/javascript-hien-dai-phan-1/">Các khái niệm cơ bản trong JS hiện
+          đại</a>.</p>
+      <h4 id="muc1_2"><b>Lập trình hướng đối tượng</b></h4>
+      <p>Trước ES6, lập trình hướng đối tượng trong JS gây rất nhiều khó khăn cho những người đã quên thuộc với các ngôn
+        ngữ như Java, C# hay Python. ES6 đã giới thiệu tiêu chuẩn lập trình hướng đối tượng mới giúp chúng ta tiếp cận
+        một
+        cách tự nhiên hơn mà vẫn giữ được những điểu mạnh của JS trước đó. Một số khái niệm cơ bản trong lập trình hướng
+        đối tượng JS hiện đại:</p>
+      <ul>
+        <li>Khai báo lớp (class)
+        <li>Hàm khởi tạo (constructor)
+        <li>Phương thức của lớp (method)
+        <li>Getter và Setter
+        <li>Thừa kế (Inheritance)
+      </ul>
+      <p>Chi tiết về các khái niệm có thể tham khảo tại <a
+          href="https://ngocminhtran.com/2020/02/26/javascript-hien-dai-phan-1/">Các khái niệm cơ bản trong JS hiện
+          đại</a>.</p>
+      <h4 id="muc1_3"><b>Lập trình không đồng bộ</b></h4>
+      <p>Các nhà phát triển cung cấp nhiều API Web giúp việc truy cập hay nạp dữ liệu từ các nguồn trên Internet hiệu
+        quả hơn nhờ cơ chế làm việc không đồng bộ. Có 3 kỹ thuật không đồng bộ trong JS:</p>
+      <ul>
+        <li>Sử dụng callbacks
+        <li>Promise
+        <li>Async/Await
+      </ul>
+      <p>Chi tiết về các khái niệm có thể tham khảo tại <a
+          href="https://ngocminhtran.com/2020/04/05/nhap-mon-javascript-hien-dai-phan-2-lap-trinh-khong-dong-bo/">Các
+          khái niệm cơ bản trong JS hiện
+          đại</a>.</p>
+      <h2 id="muc2"><b>Các khái niệm và thao tác cơ bản trong Node.js</b></h2>
+      <p>Một vài khái niệm làm quen với NodeJS đã được trình bày trong <a href="Bai01.html">Bài 1</a>. Trong mục này,
+        chúng ta sẽ tìm hiểu về Mô
+        đun (Module) - khái niệm cốt lõi trong NodeJS.</p>
+      <h4 id="muc2_1"><b>Mô đun (Module) trong NodeJS</b></h4>
+      <p>Một mô đun trong Node.js có thể được xem như một thư viện chứa các hàm JavaScript. Muốn sử dụng hàm nào, chúng
+        ta
+        phải biết hàm đó thuộc mô đun nào để yêu cầu Node truy cập mô đun đó trước khi sử dụng. Node.js cung cấp hai
+        kiểu mô đun:</p>
+      <ul>
+        <li>Các mô đun được tạo sẵn, ví dụ <i>http</i>.
+        <li>Các mô đun do người dùng tạo.
+      </ul>
+      <p>Để truy cập mô đun (cả hai kiểu) chúng ta dùng hàm <i>require</i>. Xét các ví dụ về 2 kiểu mô đun.</p>
+      <div class="tab">
+        <button class="tablinks active" onclick="myTab(event, 'build')">Mô đun được tạo sẵn</button>
+        <button class="tablinks" onclick="myTab(event, 'user')">Mô đun do người dùng tạo</button>
+      </div>
+      <div id="build" class="tabcontent" style="display: block;">
+        <p>Ví dụ trong đoạn mã từ
+          tập
+          tin myFirstNode.js:</p>
+        <script src="https://gist.github.com/hoctructuyencntt/483ed1c3ef2fbff059602741541003ee.js"></script>
+        <p>Chúng ta dùng hàm <i>require</i> để truy cập mô đun tạo sẵn là <i>http</i> trước khi sử dụng hàm
+          <i>createServer</i>. Chúng ta sẽ gặp lại mô đun này trong phần kế tiếp.
+        </p>
+      </div>
+      <div id="user" class="tabcontent">
+        <p>Trong Node.js, mô đun là một tập tin js chứa các hàm và thuộc tính. Chúng ta sẽ tạo một mô đun tên
+          myModuleNode.js trong thư mục MyNodeJS có nội dung sau:</p>
+        <script src="https://gist.github.com/hoctructuyencntt/e792f0b8c55a6563a075afe23d330196.js"></script>
+        <p>Từ khóa <i>exports</i> cho phép các thành phần trong mô đun có thể được sử dụng bên ngoài mô đun. Truy cập mô
+          đun
+          myModuleNode.js từ tập tin myUserModule.js:</p>
+        <script src="https://gist.github.com/hoctructuyencntt/f96324b626624b0fda2f624a33ca34d8.js"></script>
+        <p>./ nghĩa là tập tin mô đun và tập tin Node.js chứa trong cùng thư mục. Từ cửa sổ Terminal, gõ lệnh:</p>
+        <p><i>D:\MyNodeJS> node myUserModule.js</i></p>
+        <p>Enter và truy cập http://localhost:8080</p>
+      </div>
+      <p>Các thao tác cơ bản trong NodeJS được sử dụng thông qua các mô đun tạo sẵn phổ biến sẽ được trình bày sau đây.
+      </p>
+      <h4 id="muc2_2"><b>Truyền dữ liệu</b></h4>
+      <p> Node.js có một mô đun tích hợp sẵn có tên <i>HTTP</i>, cho phép Node.js truyền dữ liệu qua <i>Giao thức truyền
+          siêu văn bản (HTTP - Hyper Text Transfer Protocol)</i>.
+        Để truy cập mô-đun HTTP, chúng ta dùng phương thức <i>require</i> như ví dụ tập tin myFirstNode.js:</p>
+      <script src="https://gist.github.com/hoctructuyencntt/483ed1c3ef2fbff059602741541003ee.js"></script>
+      <p>Mô đun HTTP có thể tạo một máy chủ HTTP lắng nghe các cổng của máy chủ và gửi phản hồi lại cho máy khách. Sử
+        dụng
+        phương thức <i>createServer</i> để tạo một máy chủ HTTP như đoạn mã từ tập tin myFirstNode.js trên. Hàm được
+        truyền vào phương thức <i>http.createServer()</i> sẽ được thực thi khi ai đó cố gắng truy cập vào máy tính trên
+        cổng
+        8080.</p>
+      <h4 id="muc2_3"><b>Thao tác với tập tin</b></h4>
+      <p>Mô đun hệ thống tập tin Node.js là <i>FS</i> cho phép làm việc với hệ thống tập tin trên máy tính của chúng ta.
+        Để truy cập
+        mô đun <i>FS</i> chúng ta dùng hàm <i>require</i> tương tự khi dùng <i>HTTP</i>. Các thao tác chính có thể sử
+        dụng từ mô đun FS bao gồm:</p>
+      <ul>
+        <li>Đọc tập tin (Read files)
+        <li>Tạo tập tin (Create files)
+        <li>Cập nhật tập tin (Update files)
+        <li>Xóa các tập tin (Delete files)
+        <li>Đổi tên tập tin (Rename files)
+      </ul>
+      <p>Chúng ta sẽ lần lượt xét từng chức năng trên.</p>
+      <div class="tab">
+        <button class="tablinks active" onclick="myTab(event, 'read')">Đọc tập tin</button>
+        <button class="tablinks" onclick="myTab(event, 'create')">Tạo tập tin</button>
+        <button class="tablinks" onclick="myTab(event, 'update')">Cập nhật tập tin</button>
+        <button class="tablinks" onclick="myTab(event, 'delete')">Xóa các tập tin</button>
+        <button class="tablinks" onclick="myTab(event, 'rename')">Đổi tên tập tin</button>
+      </div>
+      <div id="read" class="tabcontent" style="display: block;">
+        <p> Phương thức <i>fs.readFile()</i> được sử dụng để đọc các tập tin trên máy tính của chúng ta. Để minh họa
+          chức năng đọc
+          tập tin, chúng ta sẽ tạo một tập tin tên <i>demofile1.html</i> trong thư mục MyNodeJS có nội dung sau:</p>
+        <script src="https://gist.github.com/hoctructuyencntt/05780f92927f1f82c2cda038f2cf79f3.js"></script>
+        <p>Kế tiếp, tạo tập tin Node.js tên <i>demo_readfile.js</i> cũng trong thư mục MyNodeJS có nội dung như sau:</p>
+        <script src="https://gist.github.com/hoctructuyencntt/d5bab423de8464d27d9bd1f5cab1c08d.js"></script>
+        <p>Từ cửa sổ Terminal, gõ lệnh:</p>
+        <p><i>D:\MyNodeJS> node demo_readfile.js</i></p>
+        <p>Enter và truy cập http://localhost:8080</p>
+      </div>
+      <div id="create" class="tabcontent">
+        <p>Mô đun <i>FS</i> có các phương thức để tạo tập tin mới:</p>
+        <ul>
+          <li>fs.appendFile()
+          <li>fs.open()
+          <li>fs.writeFile()
+        </ul>
+        <h4>fs.appendFile()</h4>
+        <p>Phương thức <i>fs.appendFile()</i> nối thêm nội dung đã chỉ định vào một tập tin. Nếu tập tin không tồn tại,
+          tập tin sẽ
+          được tạo. Để kiểm tra, tạo tập tin Node.js tên <i>demo_appendfile.js</i> cũng trong thư mục MyNodeJS có nội
+          dung như
+          sau:</p>
+        <script src="https://gist.github.com/hoctructuyencntt/504bc4f98cd09a0c040d043c023775cf.js"></script>
+        <p>Từ cửa sổ Terminal, gõ lệnh:</p>
+        <p><i>D:\MyNodeJS> node demo_appendfile.js</i></p>
+        <p>Enter và cửa sổ Terminal xuất hiện từ <i>Save!</i>.
+          Truy cập http://localhost:8080 xem kết quả trên trình duyệt web.</p>
+        <h4>fs.open()</h4>
+        <p>Phương thức <i>fs.open()</i> lấy "cờ" làm đối số thứ hai, nếu cờ là "w" cho "viết", thì tập tin đã chỉ định
+          sẽ được mở
+          để ghi. Nếu tập tin không tồn tại, một tập tin trống sẽ được tạo. Để kiểm tra, tạo tập tin Node.js tên
+          <i>demo_openfile.js</i> cũng trong thư mục MyNodeJS có nội dung như sau:
+        </p>
+        <script src="https://gist.github.com/hoctructuyencntt/fc87ad2feaf5e13bfaa0e99b033abff0.js"></script>
+        <p>Từ cửa sổ Terminal, gõ lệnh:</p>
+        <p><i>D:\MyNodeJS> node demo_openfile.js</i></p>
+        <p>Enter và cửa sổ Terminal xuất hiện từ <i>Save!</i>. Vì <i>mynewfile2.txt</i> chưa được tạo trước đó nên
+          <i>fs.open()</i> sẽ
+          tạo một file mới, chưa có nội dung và sẵn sàng cho chúng ta thêm nội dung vào (cờ w). Tìm đến tập tin
+          <i>mynewfile2.txt</i> và thêm nội dung:
+        <p><i>Toi duoc tao tu fs.open.</i></p>
+        <p>Lưu nội dung. Truy cập http://localhost:8080 xem kết quả trên trình duyệt web.</p>
+        <h4>fs.writeFile()</h4>
+        <p>Phương thức <i>fs.writeFile()</i> thay thế tập tin và nội dung đã chỉ định nếu nó tồn tại. Nếu tập tin không
+          tồn tại,
+          một tập tin mới chứa nội dung đã chỉ định sẽ được tạo. Để kiểm tra, tạo tập tin Node.js tên
+          <i>demo_writefile.js</i>
+          cũng trong thư mục MyNodeJS có nội dung như sau:
+        </p>
+        <script src="https://gist.github.com/hoctructuyencntt/c6747a4d86fdde112d32f5c61f17758d.js"></script>
+        <p>Từ cửa sổ Terminal, gõ lệnh:</p>
+        <p><i>D:\MyNodeJS> node demo_writefile.js</i></p>
+        <p>Enter và cửa sổ Terminal xuất hiện từ <i>Save!</i>.
+          Truy cập http://localhost:8080 xem kết quả trên trình duyệt web.</p>
+      </div>
+      <div id="update" class="tabcontent">
+        <p>Mô đun <i>FS</i> có các phương thức để cập nhật tập tin mới:</p>
+        <ul>
+          <li>fs.appendFile()
+          <li>fs.writeFile()
+        </ul>
+        <h4>fs.appendFile()</h4>
+        <p>Phương thức <i>fs.appendFile()</i> nối thêm nội dung đã chỉ định vào cuối tập tin đã chỉ định. Để kiểm tra,
+          tạo tập tin <i>demo_appendUpdate.js</i> trong thư mục MyNodeJS có nội dung sau:</p>
+        <script src="https://gist.github.com/hoctructuyencntt/644401d0e4be955143d7d504f94e84c7.js"></script>
+        <p>Từ cửa sổ Terminal, gõ lệnh:</p>
+        <p><i>D:\MyNodeJS> node demo_appendUpdate.js</i></p>
+        <p>Enter và cửa sổ Terminal xuất hiện từ <i>Updated!</i>. Mở tập tin <i>mynewfile1.txt</i> sẽ có nội dung được
+          cập nhật.</p>
+        <h4>fs.writeFile()</h4>
+        <p>Phương thức <i>fs.writeFile()</i> thay thế tệp và nội dung đã chỉ định. Để kiểm tra,
+          tạo tập tin <i>demo_writeFileUpdate.js</i> trong thư mục MyNodeJS có nội dung sau:</p>
+        </p>
+        <script src="https://gist.github.com/hoctructuyencntt/9667621bb3c99ee70541af66e9300b0c.js"></script>
+        <p>Từ cửa sổ Terminal, gõ lệnh:</p>
+        <p><i>D:\MyNodeJS> node demo_writeFileUpdate.js</i></p>
+        <p>Enter và cửa sổ Terminal xuất hiện từ <i>Replaced!</i>. Mở tập tin <i>mynewfile3.txt</i> sẽ có nội dung được
+          cập nhật.</p>
+      </div>
+      <div id="delete" class="tabcontent">
+        <p>Để xóa một tập tin được chỉ định, chúng ta sử dụng phương thức <i>fs.unlink()</i> của mô đun <i>FS</i>. Để
+          kiểm tra,
+          tạo tập tin <i>demo_deleteFile.js </i> trong thư mục MyNodeJS có nội dung sau:</p>
+        <script src="https://gist.github.com/hoctructuyencntt/5bd3501baed3f0e7b3e586be6e0ecd32.js"></script>
+        <p>Từ cửa sổ Terminal, gõ lệnh:</p>
+        <p><i>D:\MyNodeJS> node demo_deleteFile.js</i></p>
+        <p>Enter và cửa sổ Terminal xuất hiện từ <i>File deleted!</i> và tập tin <i>mynewfile2.txt</i> đã bị xóa.</p>
+      </div>
+      <div id="rename" class="tabcontent">
+        <p>Để đổi tên tập tin được chỉ định, sử dụng phương thức <i>fs.rename()</i> của mô đun <i>FS</i>. Để
+          kiểm tra,
+          tạo tập tin <i>demo_renameFile.js</i> trong thư mục MyNodeJS có nội dung sau:</p>
+        <script src="https://gist.github.com/hoctructuyencntt/06ef67ef0fdd528e84a3db37705ffb77.js"></script>
+        <p>Từ cửa sổ Terminal, gõ lệnh:</p>
+        <p><i>D:\MyNodeJS> node demo_renameFile.js</i></p>
+        <p>Enter. Cửa sổ Terminal xuất hiện từ <i>File Renamed!</i> và tập tin <i>mynewfile1.txt</i> đã được đổi tên
+          thành <i>myrenamedfile.txt</i>.</p>
+      </div>
+      <h4 id="muc2_4"><b>Thao tác với URL</b></h4>
+      <p>Mô đun <i>URL</i> chia địa chỉ web thành các phần có thể đọc được, phân tích địa chỉ bằng phương thức
+        <i>url.parse()</i> và nó sẽ trả về một đối tượng
+        URL với mỗi phần của địa chỉ là các thuộc tính. Tương tự các mô đun khác, để truy cập mô đun
+        <i>URL</i>, chúng ta
+        sử dụng phương thức <i>require</i>. Để kiểm tra,
+        tạo tập tin <i>demo_url01.js </i> trong thư mục MyNodeJS có nội dung sau:
+      </p>
+      <script src="https://gist.github.com/hoctructuyencntt/a10e843ec2c2e5253be685fb8a62f826.js"></script>
+      <p>Từ cửa sổ Terminal, gõ lệnh:</p>
+      <p><i>D:\MyNodeJS> node demo_url01.js</i></p>
+      <p>Enter và cửa sổ Terminal xuất hiện:</p>
+      <img class="center" src="img/bai2_5.png">
+      <p>Chúng ta đã biết cách phân tích cú pháp chuỗi truy vấn và trong phần trước chúng ta đã học cách làm cho
+        Node.js hoạt động như một máy chủ tập tin. Bây giờ chúng ta kết hợp cả hai và phục vụ tập tin theo yêu cầu của
+        máy khách.</p>
+      <p>Tạo tập tin <i>summer.html</i> trong thư mục MyNodeJS có nội dung sau:</p>
+      <script src="https://gist.github.com/hoctructuyencntt/1d2f27478c28d32fd292644c967188be.js"></script>
+      <p>Tạo tập tin <i>winter.html </i> trong thư mục MyNodeJS có nội dung sau:</p>
+      <script src="https://gist.github.com/hoctructuyencntt/e70fa6bac1f59830ad7c949d208ea4eb.js"></script>
+      <p>Tạo tập tin <i>demo_url02.js </i> trong thư mục MyNodeJS mở tập tin được yêu cầu và trả lại nội dung cho máy
+        khách:
+      </p>
+      <script src="https://gist.github.com/hoctructuyencntt/0d2d014bb646aaa663d09f468a3f1afa.js"></script>
+      <p>Từ cửa sổ Terminal, gõ lệnh:</p>
+      <p><i>D:\MyNodeJS> node demo_url02.js</i></p>
+      <p>Enter. Truy cập http://localhost:8080/summer.html và http://localhost:8080/winter.html để xem kết quả trên
+        trình duyệt.</p>
+      <h4 id="muc2_5"><b>Các thao tác khác</b></h4>
+      <p>Bên cạnh các thao tác tương ứng với các mô đun đã tìm hiểu ở trên, NodeJS còn hỗ trợ nhiều mô đun cho phép
+        chúng ta tải tập tin lên (upload), gửi thư điện tử (send emails), xử lý sự kiện (events),... Chúng ta có thể tìm
+        hiểu thêm về các thao tác này tại <a href="https://www.w3schools.com/nodejs/default.asp">w3schools.com</a>.</p>
+      <h2 id="muc3"><b>Các khái niệm và thao tác cơ bản MongoDB</b></h2>
+      <p>Chúng ta đã tìm hiểu một số nét cơ bản về MongoDB trong <a href="Bai01.html">Bài 1</a>, đã cài đặt và chạy thử
+        trong <a href="Bai02.html">Bài 2</a>. Trong mục
+        này, chúng ta sẽ tìm hiểu một số thao tác cơ bản trong MongoDB, nhưng trước tiên chúng ta sẽ xem lại một vài
+        khái niệm cơ bản.</p>
+      <h4 id="muc3_1"><b>Một số khái niệm cơ bản</b></h4>
+      <p>MongoDB là một hệ thống quản lý cơ sở dữ liệu phi cấu trúc (NoSQL) được phát triển để lưu trữ và truy vấn dữ
+        liệu
+        theo mô hình tài liệu. MongoDB sử dụng định dạng JSON (JavaScript Object Notation) để lưu trữ dữ liệu, giúp dễ
+        dàng mở rộng và xử lý dữ liệu không cố định cấu trúc. Dưới đây là một số khái niệm cơ bản trong MongoDB:</p>
+      <ul>
+
+        <li>Document (Tài liệu): Là một bản ghi dữ liệu trong MongoDB, được biểu diễn dưới định dạng JSON. Các tài liệu
+          trong
+          cùng một bộ sưu tập (collection) có thể có các trường khác nhau. Các tài liệu có thể được lưu trữ dưới dạng
+          các
+          cặp key-value.
+
+        <li>Collection (Bộ sưu tập): Là một tập hợp các tài liệu liên quan trong MongoDB, tương tự như bảng trong cơ sở
+          dữ
+          liệu quan hệ. Các tài liệu trong cùng một bộ sưu tập không cần phải tuân theo một cấu trúc cố định.
+
+        <li>Database (Cơ sở dữ liệu): Là tập hợp các bộ sưu tập và là một phần quan trọng trong MongoDB. Mỗi cơ sở dữ
+          liệu có
+          thể chứa nhiều bộ sưu tập khác nhau.
+
+        <li>Field (Trường): Là một cặp key-value trong tài liệu MongoDB, tương ứng với một thông tin cụ thể. Các trường
+          không
+          bắt buộc phải có cùng loại dữ liệu trong cùng một bộ sưu tập.
+
+        <li>Index (Chỉ số): Là cơ chế tối ưu hóa truy vấn dữ liệu trong MongoDB. Chỉ số giúp tăng tốc độ truy vấn và
+          giảm tải
+          cho cơ sở dữ liệu bằng cách tạo ra một bản sao nhỏ của dữ liệu có thứ tự cụ thể.
+
+        <li>Query (Truy vấn): Là cách để truy vấn dữ liệu từ cơ sở dữ liệu MongoDB. Truy vấn được biểu thị bằng cách sử
+          dụng
+          các toán tử và điều kiện để tìm kiếm dữ liệu cụ thể.
+
+        <li>Aggregation (Tổng hợp): Là quá trình xử lý dữ liệu để tính toán và trả về các kết quả dựa trên một loạt các
+          giai
+          đoạn. Các giai đoạn này bao gồm sắp xếp, nhóm, lọc và thống kê dữ liệu.
+
+        <li>Replication (Sao lưu): Là quá trình tạo bản sao dữ liệu từ máy chủ chính (primary) đến các máy chủ phụ
+          (secondary), nhằm đảm bảo tính sẵn sàng và sao lưu dự phòng dữ liệu.
+
+        <li>Sharding (Phân chia tải): Là quá trình chia dữ liệu thành các phần nhỏ hơn gọi là các chunk và phân phối
+          chúng
+          đồng đều trên các máy chủ khác nhau, giúp tăng hiệu suất và khả năng mở rộng của hệ thống.
+
+        <li>Cụm máy chủ (Cluster): Là tập hợp các máy chủ MongoDB hoạt động cùng nhau để lưu trữ và xử lý dữ liệu. Cụm
+          máy chủ
+          cho phép mở rộng và tăng khả năng chịu tải của hệ thống.
+      </ul>
+      <p>MongoDB cung cấp một cách linh hoạt để lưu trữ và truy vấn dữ liệu, phù hợp cho các ứng dụng có tính mở rộng và
+        yêu cầu dữ liệu không cố định cấu trúc.</p>
+      <h4 id="muc3_2"><b>Kết nối và tạo cơ sở dữ liệu (Connect, Create Database)</b></h4>
+      <p>Chúng ta sẽ truy cập cơ sở dữ liệu MongoDB dùng NodeJS. Để thực hiện điều này trong môi trường VS Code, chúng
+        ta cần tạo một thư mục chứa cơ sở dữ liệu tên MGDB trong thư mục MyNodeJS chúng ta đã tạo trong phần Nodejs.
+      </p>
+      <p>Trong VS Code mở Terminal và điều hướng đến thư mục MGDB.</p>
+      <p>Cài đặt MongoDB dùng npm: <i>npm install mongodb</i></p>
+      <img class="center" src="img/bai2_3.png">
+      <p>Bây giờ chúng ta sẽ tạo cơ sở dữ liệu tên <i>mydb</i> bằng cách tạo tập tin tên <i>demo_create.js</i>
+        trong thư mục MGDB có nội dung như sau:</p>
+      <script src="https://gist.github.com/hoctructuyencntt/67b9429165fa3ffdd037b0202ebe279c.js"></script>
+      <p>Để tạo cơ sở dữ liệu trong MongoDB, chúng ta bắt đầu bằng cách tạo đối tượng <i>MongoClient</i>, sau đó chỉ
+        định URL kết nối
+        với địa chỉ IP chính xác và tên của cơ sở dữ liệu bạn muốn tạo (trong ví dụ trên là <i>mydb</i>). MongoDB sẽ tạo
+        cơ sở dữ liệu nếu chưa tồn tại và
+        tạo kết nối đến cơ sở dữ liệu này. Chúng ta sử dụng khai báo hàm <i>async</i> để thực hiện việc kết nối tới
+        MongoDB, sử
+        dụng <i>await</i> để chờ cho đến khi kết nối hoàn thành, và đóng kết nối ngay sau khi kết nối thành công.
+      </p>
+      <p>Thực thi tập tin vừa tạo với NodeJS: <i>node demo_create.js</i> và kết quả:</p>
+      <img class="center" src="img/bai3_1.png">
+      <h4 id="muc3_3"><b>Tạo một bộ sưu tập (Create Collection)</b></h4>
+      <p>Chúng ta đã có cơ sở dữ liệu (mydb), bây giờ chúng ta sẽ tạo một bộ sưu tập (collection) trong cơ sở dữ liệu
+        này bằng
+        cách tạo tập tin <i>demo_collection.js</i> trong thư mục MGDB có nội dung sau:</p>
+      <script src="https://gist.github.com/hoctructuyencntt/4bf2b2841a78fd544ffe90843f221b6f.js"></script>
+      <p>Để tạo một collection chúng ta dùng hàm <i>createCollection()</i>. Thực thi tập tin vừa tạo với NodeJS: <i>node
+          demo_collection.js</i> và kết quả:</p>
+      <img class="center" src="img/bai3_2.png">
+      <h4 id="muc3_4"><b>Xóa một bộ sưu tập (Drop Collection)</b></h4>
+      <p>Để xóa (drop) một bộ sưu tập (collection) trong cơ sở dữ liệu, chúng ta tạo tập tin
+        <i>demo_dropcollection.js</i> trong thư mục MGDB có nội dung sau:
+      </p>
+      <script src="https://gist.github.com/hoctructuyencntt/dd712a0d980ff3ebe5ebfc1165a6c2fc.js"></script>
+      <p>Xóa một collection chúng ta dùng hàm <i>dropCollection()</i>. Thực thi tập tin vừa tạo với NodeJS: <i>node
+          demo_dropcollection.js</i> và kết quả:</p>
+      <img class="center" src="img/bai3_3.png">
+      <h4 id="muc3_5"><b>Chèn tài liệu (Insert document)</b></h4>
+      <p>Chúng ta đã có một (hay nhiều) collection (students) trong cơ sở dữ liệu (mydb). Kế tiếp, chúng ta sẽ chèn một
+        tài liệu (document) đến collection vừa tạo. Một tài liệu tương đương một bản ghi (record) hay hàng (row) trong
+        một bảng của cơ sở dữ liệu quan hệ.</p>
+      <p>Chúng ta tạo tập tin
+        <i>demo_insertOne.js</i> trong thư mục MGDB có nội dung sau:
+      </p>
+      <script src="https://gist.github.com/hoctructuyencntt/ed5a470b29d0b86aa9a8bea394463737.js"></script>
+      <p>Trong ví dụ này, chúng ta sử dụng hàm <i>insertOne</i> để chèn một document mới vào collection. Đối số truyền
+        vào là
+        một object chứa thông tin của document mới. Thực thi tập tin vừa tạo với NodeJS: <i>node
+          demo_insertOne.js</i> và kết quả:</p>
+      </p>
+      <img class="center" src="img/bai3_4.png">
+      <p>Chúng ta cũng có thể chèn nhiều document đến collection cùng lúc bằng cách dùng hàm insertMany(). Tạo tập tin
+        demo_insertMany.js có nội dung sau: </p>
+      <script src="https://gist.github.com/hoctructuyencntt/221f0c1a74d2bdeabef707e68e4e0d1e.js"></script>
+      <p>Trong ví dụ này, chúng ta sử dụng hàm <i>insertMany</i> để chèn một mảng các documents mới vào collection. Đối
+        số
+        truyền vào là một mảng chứa thông tin của các documents mới. Lưu ý rằng chúng ta cũng dùng hàm
+        <i>result.insertedCount</i> trả về số lượng
+        documents đã được chèn. Thực thi tập tin vừa tạo với NodeJS: <i>node
+          demo_insertMany.js</i> và kết quả:
+      </p>
+      <img class="center" src="img/bai3_5.png">
+      <p><i><u>Chú ý:</u></i> Khi chèn một document vào collection sẽ có một trường ngầm định là <i>_id</i> quy định
+        tính duy nhất của mỗi document trong collection. Trường <i>_id</i> chúng ta sẽ bắt gặp trong các phần kế tiếp.
+      </p>
+      <h4 id="muc3_6"><b>Hiển thị tài liệu (Find document)</b></h4>
+      <p>Để hiển thị dữ liệu từ một hay nhiều bảng trong cơ sở dữ liệu quan hệ, chúng ta dùng câu lệnh SQL
+        <i>select</i>. Trong mongodb, hàm <i>find()</i> có chức năng tương tự.
+      </p>
+      <p>Tập tin <i>demo_find.js</i> trong thư mục MGDB dùng hàm <i>find()</i> hiển thị tất cả các document từ
+        collection
+        <i>students</i> có nội dung như sau:
+      </p>
+      <script src="https://gist.github.com/hoctructuyencntt/7c90bcfcd1e48edb056993ede6ad9683.js"></script>
+      <p>Trong ví dụ này, chúng ta sử dụng hàm <i>find</i> để hiển thị các documents từ collection. Đối số truyền vào là
+        một
+        object mô tả điều kiện hiển thị, nếu rỗng nghĩa là hiển thị tất cả các documents (tương đương <i>select *</i> ).
+        Trong trường hợp này,
+        find trả về một cursor, một tập hợp các documents. Chúng ta có thể sử dụng phương thức forEach trên cursor để
+        lặp
+        qua từng document và thực hiện các thao tác mong muốn. Thực thi tập tin vừa tạo với NodeJS: <i>node
+          demo_find.js</i> và kết quả:</p>
+      <img class="center" src="img/bai3_6.png">
+      <p>Trường <i>_id</i> là trường ngầm định quy định tính duy nhất của mỗi document trong colection. Chúng ta có thể
+        khởi tạo giá trị cho _id của mỗi document, nếu không, mongodb sẽ tự động phát sinh các giá trị cho trường _id
+        của mỗi document như ví dụ trên.</p>
+      <p>Trong trường hợp collection chứa nhiều tài liệu (hàng nghìn, trăm nghìn,...), chúng ta có thể hạn chế số
+        document hiển thị bằng hàm <i>limit(num)</i> với <i>num</i> là số document được phép hiển thị. Ví dụ:</p>
+      <div class="w3-code notranslate htmlHigh"> const cursor = collection.find().limit(2); // Chỉ hiển thị 2 document
+      </div>
+      <p>Một trường hợp khác, thay vì hiển thị tất cả các document trong collection chúng ta muốn chỉ hiển thị document
+        đầu tiên bằng cách
+        dùng hàm <i>findOne()</i>. Tạo tập tin <i>demo_findOne.js</i> có nội dung sau:</p>
+      <script src="https://gist.github.com/hoctructuyencntt/c3a204b9b7e083e25fc8e0b5323f76aa.js"></script>
+      <p>Thực thi tập tin vừa tạo với NodeJS: <i>node
+          demo_findOne.js</i> và kết quả:</p>
+      <img class="center" src="img/bai3_7.png">
+      <p>Hàm <i>find()</i> hiển thị tất cả các document và mỗi document gồm các trường (fields) - là các cặp key : value
+        như ten : 'Minh', tuoi : 18, quequan : 'Nha Trang'. Trong nhiều trường hợp chúng ta chỉ muốn hiển thị document
+        với chỉ một vài trường được chọn, ví dụ chúng ta chỉ muốn hiển thị tất cả các document và mỗi document chỉ gồm
+        các trường ten, tuoi, quequan và không hiển thị _id. Để thực hiện điều này, chúng ta dùng hàm <i>project()</i>
+        với đối
+        số chỉ định các trường được hiển thị (gán giá trị 1) và không được hiển thị (gán giá trị 0).</p>
+      <p>Minh họa cho trường hợp này, chúng ta tạo tập tin <i>demo_findProject.js</i> có nội dung sau:</p>
+      <script src="https://gist.github.com/hoctructuyencntt/bbfd1ca0db5f981b45df3d7ed47a2ea9.js"></script>
+      <p>Thực thi tập tin vừa tạo với NodeJS: <i>node
+          demo_findProject.js</i> và kết quả:</p>
+      <img class="center" src="img/bai3_8.png">
+      <p>Trong ví dụ này, chúng ta sử dụng phương thức <i>project()</i> để thiết lập đối số <i>projection</i> trong truy
+        vấn <i>find</i>.
+        Đối số <i>projection</i> được sử dụng để chỉ định các trường cần được lấy ra trong kết quả truy vấn.</p>
+      <p><i><u>Chú ý quan trọng</u></i>: <i>Ngoại trừ trường _id, chúng ta không được phép gán đồng thời giá trị 0 và 1
+          cùng một
+          object
+          hay document. Một trường (ngoại trừ _id) được gán 1 thì tất cả trường còn lại được gán là 0 và ngược lại.</i>
+      </p>
+      <p>Khởi tạo lại biến <i>projection</i> trong tập demo_findProject.js như sau:</p>
+      <div class="w3-code notranslate htmlHigh">const projection = { _id: 0, ten: 1 };</div>
+      <p>Kết quả:</p>
+      <img class="center" src="img/bai3_9.png">
+      <p>Chúng ta có thể gán _id đến 0 hay 1 tùy nhu cầu: </p>
+      <div class="w3-code notranslate htmlHigh">const projection = { _id: 1, ten: 1 };</div>
+      <p>Kết quả:</p>
+      <img class="center" src="img/bai3_10.png">
+      <p>Nếu chúng ta không viết _id có thể hiểu _id được gán đến 1.</p>
+      <div class="w3-code notranslate htmlHigh">const projection = { ten: 1 };</div>
+      <p>Kết quả:</p>
+      <img class="center" src="img/bai3_10.png">
+      <p>Vì trường <i>ten</i> được gán đến 1 nên các trường còn lại (trừ _id) như <i>tuoi</i> và <i>quequan</i> được
+        hiểu ngầm là gán đến 0.
+        Tuy nhiên, chúng ta <i><u>không được phép viết</u></i>:</p>
+      <div class="w3-code notranslate htmlHigh">const projection = { ten: 1, tuoi: 0 };</div>
+      <p>Kết quả:</p>
+      <img class="center" src="img/bai3_11.png">
+      <p>Nhưng có thể viết:</p>
+      <div class="w3-code notranslate htmlHigh">const projection = { ten: 1, tuoi: 1 };</div>
+      <p>Kết quả:</p>
+      <img class="center" src="img/bai3_12.png">
+      <p>Cuối cùng, nếu projection chỉ có duy nhất trường _id được gán đến 0, các trường còn lại có thể ngầm hiểu được
+        gán đến 1:</p>
+      <div class="w3-code notranslate htmlHigh">const projection = { _id: 0 };</div>
+      <p>Kết quả:</p>
+      <img class="center" src="img/bai3_13.png">
+      <h4 id="muc3_7"><b>Lọc tài liệu (Filter document)</b></h4>
+      <p>Trong cơ sở dữ liệu quan hệ, để hiển thị thông tin các sinh viên có tuổi nhỏ hơn 21, chúng ta có thể dùng lệnh
+        <i>select</i> kết hợp lệnh <i>where</i>. Trong mongodb, chúng ta dùng hàm <i>find(query)</i> với đối số
+        <i>query</i> là một đối tượng chứa điều kiện. <i>query</i> có định dạng:
+      </p>
+      <div class="w3-code notranslate htmlHigh">
+        {<br>
+        &nbsp;&nbsp;field1: value1,<br>
+        &nbsp;&nbsp;field2: { operator: value },<br>
+        &nbsp;&nbsp;...<br>
+        }
+      </div>
+      <p>Chúng ta có thể lọc các document dựa theo trường <i>field1</i> với giá trị là <i>value1</i> hay phức tạp hơn,
+        ví dụ lọc danh sách sinh viên có tuổi nhỏ hơn 21, chúng ta dùng định dạng <i>field2: { operator: value }</i> với
+        <i>operator</i> là các toán tử được quy định bởi mongodb. Có thể tìm hiểu chi tiết hơn về <a
+          hre="https://www.mongodb.com/docs/manual/core/document/#std-label-document-query-filter">lọc</a> và <a
+          href="https://www.mongodb.com/docs/manual/reference/operator/query/#std-label-query-projection-operators-top">các
+          toán tử</a>.
+      </p>
+      <p>Xét ví dụ lọc danh sách sinh viên có tuổi nhỏ hơn 21 bằng cách tạo tập tin <i>demo_query.js</i> có nội dung
+        sau:</p>
+      <script src="https://gist.github.com/hoctructuyencntt/e9906ae81734c4d5e8fe0276c40a054a.js"></script>
+      <p>Kết quả:</p>
+      <img class="center" src="img/bai3_14.png">
+      <p>Ví dụ trên chúng ta dùng định dạng cho <i>query</i> như sau:</p>
+      <div class="w3-code notranslate htmlHigh">
+        {<br>
+        &nbsp;&nbsp;tuoi: { $lt: 21 }<br>
+        }
+      </div>
+      <p>Toán tử lọc <i>$lt</i> được sử dụng trong so sánh nhỏ hơn. Tham khảo thêm <a
+          href="https://www.mongodb.com/docs/manual/reference/operator/query/#std-label-query-projection-operators-top">các
+          toán tử khác</a>.</p>
+      <p>Bây giờ chúng ta muốn hiển thị các sinh viên có quê quán Nha trang. Thay đổi biến query từ tập tin
+        demo_query.js như sau:</p>
+      <div class="w3-code notranslate htmlHigh">const query = { quequan: 'Nha Trang' };</div>
+      <p>Kết quả:</p>
+      <img class="center" src="img/bai3_15.png">
+      <p>Bây giờ chúng ta muốn hiển thị các sinh viên có quê quán Nha trang và tuổi lớn hơn 18. Thay đổi biến query từ
+        tập tin
+        demo_query.js như sau:</p>
+      <div class="w3-code notranslate htmlHigh">const query = { $and: [{ quequan: 'Nha Trang' }, { tuoi: { $gt: 18 } }]
+        };</div>
+      <p>Ở đây chúng ta dùng toán tử <i>$and</i> kết nối nhiều điều kiện thỏa mãn đồng thời và toán tử <i>$gt</i> so
+        sánh lớn hơn.</p>
+      <p>Đối với các trường có giá trị là các chuỗi (strings), trong nhiều trường hợp chúng ta cần sử dụng <a
+          href="https://ngocminhtran.com/regular-expression-co-ban/">biểu thức thường quy (regular expression)</a> để so
+        khớp giá trị. Ví dụ hiển thị danh sách sinh viên có quê quán bắt đầu bằng chữ 'N', biến query thay đổi như sau:
+      </p>
+      <div class="w3-code notranslate htmlHigh">const query = { quequan: /^N/ }; </div>
+      <p>Kết quả:</p>
+      <img class="center" src="img/bai3_16.png">
+      <h4 id="muc3_8"><b>Xóa tài liệu (Delete document)</b></h4>
+      <p>Để xóa danh sách document theo điều kiện nào đó chúng ta dùng hàm <i>deleteMany(query)</i> với <i>query</i> là
+        đối tượng chứa điều kiện (xem lại <a href="#muc3_7">Lọc tài liệu (Filter document)</a>). Nếu <i>query = {}</i>
+        toàn bộ document trong collection sẽ bị xóa. Tạo tập tin
+        <i>demo_deleteAllDoc.js</i> trong thư mục MGDB có nội dung:
+      </p>
+      <script src="https://gist.github.com/hoctructuyencntt/e2d3b68ef3f68276fd8182dc5a18433b.js"></script>
+      <p>Kết quả:</p>
+      <img class="center" src="img/bai3_17.png">
+      <p>Để xóa danh sách sinh viên có tuổi nhỏ hơn 21, chúng ta thay đổi hàm deleteMany() từ tập tin
+        <i>demo_deleteAllDoc.js</i> như sau:
+      </p>
+      <div class="w3-code notranslate htmlHigh">
+        {<br>
+        &nbsp;&nbsp;const query = { tuoi: { $lt: 21 } };<br>
+        &nbsp;&nbsp;const result = await collection.deleteMany(query);<br>
+        }
+      </div>
+      <p>Kết quả:</p>
+      <img class="center" src="img/bai3_18.png">
+      <p>Hàm deleteMany() xóa tất cả document thỏa điều kiện. MongoDB còn hỗ trợ hàm deleteOne() chỉ xóa document đầu
+        tiên trong danh sách các document thỏa điều kiện.</p>
+      <h4 id="muc3_9"><b>Cập nhật tài liệu (Update document)</b></h4>
+      <p>Để cập nhật nội dung một hay nhiều document trong collection chúng ta dùng hàm <i>updateOne(query,
+          newValue)</i> hay <i>updateMany(query, newValue)</i> với <i>query</i> là đối tượng chứa điều kiện lọc các tài
+        liệu cần cập nhật (xem lại <a href="#muc3_7">Lọc tài liệu (Filter document)</a>) và <i>newValue</i> là giá trị
+        cập nhật.</p>
+      <p>Trước khi minh họa, chúng ta hãy nhìn lại các document từ collection students đang có:</p>
+      <img class="center" src="img/bai3_8.png">
+      <p>Giả sử chúng ta muốn thay đổi quê quán đến Ninh Hòa cho tất cả sinh viên có tuổi nhỏ hơn 21. Tạo tập tin
+        <i>demo_update.js</i> có nội dung sau:
+      </p>
+      <script src="https://gist.github.com/hoctructuyencntt/8dffcaaee5e681a0c634eefd87a527c0.js"></script>
+      <p>Vì cập nhật tất cả sinh viên có tuổi nhỏ hơn 21 nên chúng ta dùng hàm updateMany(). Kết quả:</p>
+      <img class="center" src="img/bai3_19.png">
+      <p>Chúng ta dùng toán tử <i>$set</i> để gán giá trị cập nhật.</p>
+      <h4 id="muc3_10"><b>Sắp xếp các tài liệu (Sort document)</b></h4>
+      <p>Khi hiển thị các document (hàm find) từ một collection, chúng ta có thể hiển thị theo thứ tự tăng hay giảm dần
+        theo một trường nào đó. Tập tin <i>demo_sort.js</i> được tạo trong thư mục MGDB sắp xếp danh sách sinh viên tăng
+        dần
+        theo tuổi có nội dung sau:</p>
+      <script src="https://gist.github.com/hoctructuyencntt/29eeeb87300a0044baa239d83c1eb033.js"></script>
+      <p>Kết quả:</p>
+      <img class="center" src="img/bai3_20.png">
+      <p>Chúng ta sử dụng hàm <i>sort(querysort)</i> để sắp xếp các document theo trường nào đó dựa trên đối số
+        <i>querysort</i> có định dạng sau:
+      </p>
+      <div class="w3-code notranslate htmlHigh">
+        const sortquery = { trường : 1 };-> Nếu sắp tăng dần theo trường<br>
+        const sortquery = { trường : -1 };-> Nếu sắp giảm dần theo trường<br>
+      </div>
+      <h4 id="muc3_11"><b>Kết nối các tài liệu (Join document)</b></h4>
+      <p>Trong cơ sở dữ liệu quan hệ chúng ta có thể dùng lệnh <i>join</i> để kết nối các bảng có quan hệ với nhau và
+        MongoDB cũng có thể thực hiện được điều tương tự với các collection của mình nhờ toán tử <i>$lookup</i> và hàm
+        <i>aggregate()</i>. Để minh họa chúng ta sẽ tạo các collection Students và Departments như sau:
+      </p>
+      <h4>Students</h4>
+      <div class="w3-code notranslate htmlHigh">
+        { _id: "SV01", ten: 'Minh', tuoi: 18, quequan: 'Nha Trang', khoa_id: "KH01" },<br>
+        { _id: "SV02", ten: 'Dung', tuoi: 21, quequan: 'Ninh Hoa', khoa_id: "KH01" },<br>
+        { _id: "SV03", ten: 'Hung', tuoi: 19, quequan: 'Cam Ranh', khoa_id: "KH02" }
+      </div>
+      <h4>Departments</h4>
+      <div class="w3-code notranslate htmlHigh">
+        { _id: "KH01", tenKH: 'Cơ Khí' },<br>
+        { _id: "KH02", tenKH: 'Công Nghệ' },<br>
+        { _id: "KH03", tenKH: 'Điện Tử' }
+      </div>
+      <p>Bây giờ chúng ta sẽ thể hiện thông tin Departments cùng với thông tin Students tương ứng bằng cách tạo tập tin
+        <i>demo_join.js</i> có nội dung như sau:
+      </p>
+      <script src="https://gist.github.com/hoctructuyencntt/ca43722f20c4a3a993b74722e3df666f.js"></script>
+      <p>Kết quả:</p>
+      <div class="w3-code notranslate htmlHigh">
+        [{"_id":"KH01","tenKH":"Cơ Khí","Các sinh viên:":[{"_id":"SV01","ten":"Minh","tuoi":18,"quequan":"Nha
+        Trang","khoa_id":"KH01"},{"_id":"SV02","ten":"Dung","tuoi":21,"quequan":"Ninh
+        Hoa","khoa_id":"KH01"}]},<br>
+        {"_id":"KH02","tenKH":"Công Nghệ","Các sinh
+        viên:":[{"_id":"SV03","ten":"Hung","tuoi":19,"quequan":"Cam
+        Ranh","khoa_id":"KH02"}]},<br>
+        {"_id":"KH03","tenKH":"Điện Tử","Các sinh viên:":[]}]
+      </div>
+      <script>
+        function myTab(evt, tabName) {
+          var i, tabcontent, tablinks;
+
+          tabcontent = document.getElementsByClassName("tabcontent");
+          for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+          }
+          tablinks = document.getElementsByClassName("tablinks");
+          for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+          }
+          document.getElementById(tabName).style.display = "block";
+          evt.currentTarget.className += " active";
+        }
+      </script>
+      <div class="w3-center">
+        <div class="pagination">
+          <a href="Bai02.html">Bài trước</a>
+          <a href="Bai04.html">Bài tiếp theo</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- End page content -->
+  </div>
+
+  <script src="https://www.jdoodle.com/assets/jdoodle-pym.min.js" type="text/javascript"></script>
+  <script>
+    // Script to open and close sidebar
+    function w3_open() {
+      document.getElementById("mySidebar").style.display = "block";
+      document.getElementById("myOverlay").style.display = "block";
+    }
+
+    function w3_close() {
+      document.getElementById("mySidebar").style.display = "none";
+      document.getElementById("myOverlay").style.display = "none";
+    }
+
+    // Phần button top
+    var mybutton = document.getElementById("myBtn");
+
+
+    window.onscroll = function () { scrollFunction() };
+
+    function scrollFunction() {
+      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        mybutton.style.display = "block";
+      } else {
+        mybutton.style.display = "none";
+      }
+    }
+
+
+    function topFunction() {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    }
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+<title>Bài 1: Giới thiệu Node.js (NodeJS) và MongoDB</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="w3.css">
+<link rel="stylesheet" href="font.css">
+<link rel="stylesheet" href="font-awesome.min.css">
+<style>
+  #myBtn {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    z-index: 99;
+    font-size: 18px;
+    border: none;
+    outline: none;
+    background-color: pink;
+    color: black;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 4px;
+  }
+
+  #myBtn:hover {
+    background-color: #555;
+  }
+
+  .w3-main a {
+    background-color: red;
+  }
+
+  .pagination {
+    display: inline-block;
+  }
+
+  .pagination a {
+    color: white;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+    background-color: gray;
+  }
+
+  .pagination a.active {
+    background-color: gray;
+    color: white;
+    border: 1px solid #4CAF50;
+  }
+
+  .pagination a:hover:not(.active) {
+    background-color: #ddd;
+  }
+
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Raleway", sans-serif
+  }
+
+
+  table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  table td,
+  table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  /*
+  #tab tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+*/
+  table tr:hover {
+    background-color: #ddd;
+  }
+
+  table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #04AA6D;
+    color: white;
+  }
+
+  .center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
+
+  .w3-code a {
+    background-color: transparent;
+    text-decoration: none;
+    color: blue;
+  }
+
+  .video-container {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+
+  .video-container::after {
+    padding-top: 56.25%;
+    display: block;
+    content: '';
+  }
+
+  .video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<body class="w3-black w3-content" style="max-width:1600px">
+
+  <!-- Sidebar/menu -->
+  <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+    <div class="w3-container">
+      <a href="#" style="text-decoration: none;" onclick="w3_close()"
+        class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey" title="Đóng"> X </a>
+      <!--<h4><b>Giáo trình</b></h4>-->
+    </div>
+    <div class="w3-bar-block">
+      <a href="Bai01.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding w3-text-teal">Bài 1: Giới thiệu
+        Node.js (NodeJS) và MongoDB</a>
+
+      <a href="Bai02.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài 2: Viết ứng dụng đầu tiên
+        với Node.js và MongoDB</a>
+
+      <a href="Bai03.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài 3: Các khái niệm và thao
+        tác cơ bản trong Node.js và MongoDB</a>
+      <a href="Baitap03.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài tập</a>
+      <a href="Bai04.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài 4: Xây dựng web với nền
+        tảng Express (Express Framework)</a>
+      <a href="Baitap03.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài tập</a>
+      <a href="Baitap04.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài 5: Xây dựng ứng dụng web
+        hướng máy chủ</a>
+      <a href="Baitap03.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài tập</a>
+      <a href="Thamkhao.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài 6: Kiểm thử và triển
+        khai ứng dụng web</a>
+    </div>
+  </nav>
+
+  <!-- Overlay effect when opening sidebar on small screens -->
+  <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer"
+    title="close side menu" id="myOverlay">=</div>
+
+  <!-- !PAGE CONTENT! -->
+  <div class="w3-main" style="margin-left:300px">
+    <button onclick="topFunction()" id="myBtn" title="Go to top">Lên đầu trang</button>
+    <!-- Header -->
+    <header id="portfolio">
+      <!--<a href="#"><img src="/w3images/avatar_g2.jpg" style="width:65px;"
+          class="w3-circle w3-right w3-margin w3-hide-large w3-hover-opacity"></a>-->
+      <span class="w3-button w3-hide-large w3-xxlarge w3-hover-text-grey" onclick="w3_open()">=</span>
+      <div class="w3-container">
+        <h1><b>Bài 1: Giới thiệu Node.js (NodeJS) và MongoDB</b></h1>
+        <div class="w3-section w3-bottombar"></div>
+      </div>
+    </header>
+
+    <div class="w3-container w3-padding-large" style="margin-bottom:32px">
+      <div class="w3-center">
+        <div class="pagination">
+          <a href="Bai02.html">Bài tiếp theo</a>
+        </div>
+      </div>
+      <div class="w3-code notranslate htmlHigh">
+        <h4>Nội dung bài học</h4>
+        <ol>
+          <li><a href="#muc1">Giới thiệu Node.js (NodeJS)</a>
+            <ul>
+              <li><a href="#muc1_1">Node.js là gì?</a>
+              <li><a href="#muc1_2">Tại sao phải dùng Node.js?</a>
+              <li><a href="#muc1_3">Node.js có thể làm gì?</a>
+              <li><a href="#muc1_4">Tập tin Node.js là gì?</a>
+            </ul>
+          </li>
+          <li><a href="#muc2">Giới thiệu MongoDB</a>
+            <ul>
+              <li><a href="#muc2_1">MongoDB là gì?</a>
+              <li><a href="#muc2_2">So sánh RDBMS và MongoDB</a>
+              <li><a href="#muc2_2">Các đặc trưng của MongoDB</a>
+              <li><a href="#muc2_2">Khi nào dùng MongoDB?</a>
+            </ul>
+          </li>
+          <li><a href="#muc3">Các ứng dụng thực tế dùng Node.js và MongoDB </a>
+
+          </li>
+
+        </ol>
+      </div>
+      <h2 id="muc1"><b>Giới thiệu Node.js (NodeJS)</b></h2>
+      <h4 id="muc1_1"><b>Node.js là gì?</b></h4>
+      <ul>
+        <li>Node.js là một môi trường máy chủ mã nguồn mở.
+        <li>Node.js miễn phí.
+        <li>Node.js chạy trên nhiều nền tảng khác nhau (Windows, Linux, Unix, Mac OS X, v.v.).
+        <li>Node.js sử dụng JavaScript trên máy chủ.
+      </ul>
+      <h4 id="muc1_2"><b>Tại sao phải dùng Node.js?</b></h4>
+      <p>Node.js sử dụng lập trình không đồng bộ.</p>
+      <p>Một nhiệm vụ phổ biến đối với máy chủ web (web server) có thể là mở một tập tin trên máy chủ và trả lại nội
+        dung
+        cho máy khách (web client - browser). Ví dụ cách PHP hoặc ASP xử lý yêu cầu tập tin:</p>
+      <ul>
+        <li> Gửi tác vụ đến hệ thống tập tin của máy tính.
+        <li> Đợi trong khi hệ thống tập tin mở và đọc tập tin.
+        <li>Trả về nội dung cho khách hàng.
+        <li>Sẵn sàng xử lý yêu cầu tiếp theo.
+      </ul>
+      <p> Đây là cách Node.js xử lý yêu cầu tập tin:</p>
+      <ul>
+        <li>Gửi tác vụ đến hệ thống tập tin của máy tính.
+        <li> Sẵn sàng xử lý yêu cầu tiếp theo.
+        <li>Khi hệ thống tập tin đã mở và đọc tập tin, máy chủ sẽ trả lại nội dung cho máy khách.
+      </ul>
+      <p> Node.js loại bỏ sự chờ đợi và chỉ cần tiếp tục với yêu cầu tiếp theo. Node.js chạy lập trình đơn luồng, không
+        chặn, không đồng bộ, rất hiệu quả về bộ nhớ.</p>
+
+      <h4 id="muc1_3"><b>Node.js có thể làm gì?</b></h4>
+      <ul>
+        <li>Node.js có thể tạo nội dung trang động.
+        <li>Node.js có thể tạo, mở, đọc, ghi, xóa và đóng tập tin trên máy chủ.
+        <li>Node.js có thể thu thập dữ liệu biểu mẫu.
+        <li>Node.js có thể thêm, xóa, sửa đổi dữ liệu trong cơ sở dữ liệu của bạn.
+      </ul>
+      <h4 id="muc1_4"><b>Tập tin Node.js là gì?</b></h4>
+      <ul>
+        <li>Các tập tin Node.js chứa các tác vụ sẽ được thực thi trong các sự kiện nhất định.
+        <li>Một sự kiện điển hình là ai đó đang cố truy cập vào một cổng trên máy chủ.
+        <li>Các tập tin Node.js phải được khởi tạo trên máy chủ trước khi có hiệu lực.
+        <li>Các tập tin Node.js có phần mở rộng ".js"
+      </ul>
+      <h2 id="muc2"><b>Giới thiệu MongoDB</b></h2>
+      <h4 id="muc2_1"><b>MongoDB là gì?</b></h4>
+      <p>MongoDB, cơ sở dữ liệu NoSQL phổ biến nhất, là cơ sở dữ liệu hướng tài liệu (document-oriented database) mã
+        nguồn
+        mở. Thuật ngữ "NoSQL" có nghĩa là "không quan hệ" (non-relational). Điều đó có nghĩa là MongoDB không dựa trên
+        cấu
+        trúc cơ sở dữ liệu quan hệ giống như bảng mà cung cấp một cơ chế hoàn toàn khác để lưu trữ và truy xuất dữ liệu.
+        Định dạng lưu trữ này được gọi là BSON (tương tự như định dạng JSON).</p>
+      <p>Cơ sở dữ liệu SQL lưu trữ dữ liệu ở định dạng bảng. Dữ liệu này được lưu trữ trong một mô hình dữ liệu được xác
+        định trước, mô hình này không linh hoạt lắm đối với các ứng dụng đang phát triển cao trong thế giới thực ngày
+        nay.
+        Các ứng dụng hiện đại được kết nối mạng, xã hội và tương tác nhiều hơn bao giờ hết. Các ứng dụng đang lưu trữ
+        ngày
+        càng nhiều dữ liệu và đang truy cập nó với tốc độ cao hơn.</p>
+      <p>Hệ quản trị cơ sở dữ liệu quan hệ (RDBMS) không phải là lựa chọn phù hợp khi xử lý dữ liệu lớn (big data) vì
+        chúng
+        không có khả năng mở rộng theo chiều ngang. Nếu cơ sở dữ liệu chạy trên một máy chủ duy nhất, thì nó sẽ đạt đến
+        giới hạn mở rộng. Cơ sở dữ liệu NoSQL có khả năng mở rộng cao hơn và cung cấp hiệu suất vượt trội. MongoDB là
+        một
+        cơ sở dữ liệu NoSQL mở rộng quy mô bằng cách thêm ngày càng nhiều máy chủ và tăng năng suất với mô hình tài liệu
+        linh hoạt của nó.</p>
+
+      <h4 id="muc2_2"><b>So sánh RDBMS và MongoDB</b></h4>
+      <ul>
+        <li>RDBMS có thiết kế lược đồ điển hình hiển thị số lượng bảng (table) và mối quan hệ (relationship) giữa các
+          bảng
+          này trong khi MongoDB là hướng tài liệu (document-oriented). Không có khái niệm về lược đồ hoặc mối quan hệ.
+        <li>Các giao dịch phức tạp không được hỗ trợ trong MongoDB vì các hoạt động kết hợp phức tạp không khả dụng.
+        <li>MongoDB cho phép cấu trúc tài liệu có khả năng mở rộng và linh hoạt cao. Ví dụ: một tài liệu dữ liệu của một
+          tập
+          hợp trong MongoDB có thể có hai trường trong khi tài liệu khác trong cùng một tập hợp có thể có bốn trường.
+        <li>MongoDB nhanh hơn so với RDBMS do kỹ thuật lưu trữ và lập chỉ mục hiệu quả.
+        <li>Có một số thuật ngữ có liên quan trong cả hai cơ sở dữ liệu. Cái được gọi là Bảng (Table) trong RDBMS được
+          gọi
+          là Bộ sưu tập (Collection) trong MongoDB. Tương tự, một Tuple (hay Record) được gọi là Tài liệu (Document) và
+          một
+          Cột (Column) được gọi là một Trường (Field). MongoDB cung cấp ‘_id’ mặc định (nếu không được cung cấp rõ ràng)
+          là
+          số thập lục phân 12 byte đảm bảo tính duy nhất của mọi tài liệu. Nó tương tự như khóa chính (primary key)
+          trong
+          RDBMS.
+      </ul>
+      <h4 id="muc2_3"><b>Các đặc trưng của MongoDB</b></h4>
+      <ul>
+        <li> Hướng tài liệu (Document Oriented): MongoDB lưu trữ chủ đề chính với số lượng tài liệu tối thiểu và không
+          phải
+          bằng cách chia nó thành nhiều cấu trúc quan hệ như RDBMS. Ví dụ, nó lưu trữ tất cả thông tin của một máy tính
+          trong một tài liệu duy nhất được gọi là Máy tính và không nằm trong các cấu trúc quan hệ riêng biệt như CPU,
+          RAM,
+          đĩa cứng, v.v.
+        <li>Lập chỉ mục (Indexing): Nếu không lập chỉ mục, cơ sở dữ liệu sẽ phải quét mọi tài liệu của bộ sưu tập để
+          chọn
+          những tài liệu phù hợp với truy vấn sẽ không hiệu quả. Vì vậy, để tìm kiếm hiệu quả Lập chỉ mục là điều bắt
+          buộc
+          và MongoDB sử dụng nó để xử lý khối lượng dữ liệu khổng lồ trong thời gian rất ngắn.
+        <li>Khả năng mở rộng (Scalability): MongoDB mở rộng quy mô theo chiều ngang bằng cách sử dụng phân đoạn
+          (sharding)
+          (phân vùng dữ liệu trên các máy chủ khác nhau). Dữ liệu được phân vùng thành các phần dữ liệu bằng cách sử
+          dụng
+          khóa phân đoạn và các phần dữ liệu này được phân bổ đồng đều trên các phân đoạn nằm trên nhiều máy chủ vật lý.
+          Ngoài ra, các máy mới có thể được thêm vào cơ sở dữ liệu đang chạy.
+        <li>Nhân rộng và Tính khả dụng cao (Replication and High Availability): MongoDB tăng tính khả dụng của dữ liệu
+          với
+          nhiều bản sao dữ liệu trên các máy chủ khác nhau. Bằng cách cung cấp dự phòng, nó bảo vệ cơ sở dữ liệu khỏi
+          các
+          lỗi phần cứng. Nếu một máy chủ gặp sự cố, dữ liệu có thể được truy xuất dễ dàng từ các máy chủ đang hoạt động
+          khác
+          cũng có dữ liệu được lưu trữ trên chúng.
+        <li>Tổng hợp (Aggregation): Các hoạt động tổng hợp xử lý các bản ghi dữ liệu và trả về các kết quả đã tính toán.
+          Nó
+          tương tự như mệnh đề GROUP BY trong SQL. Một số biểu thức tổng hợp là sum, average, min, max, v.v.
+      </ul>
+      <h4 id="muc2_4"><b>Khi nào dùng MongoDB?</b></h4>
+      <p>MongoDB được ưu tiên sử dụng trong các trường hợp:</p>
+      <ul>
+        <li>Dữ liệu lớn (Big Data): Nếu bạn có một lượng lớn dữ liệu được lưu trữ trong các bảng, hãy nghĩ đến MongoDB
+          trước
+          cơ sở dữ liệu RDBMS. MongoDB có giải pháp tích hợp để phân vùng và làm sắc nét cơ sở dữ liệu của bạn.
+        <li>Lược đồ không ổn định (Unstable Schema): Việc thêm một cột mới trong RDBMS rất khó trong khi MongoDB là một
+          lược
+          đồ ít hơn. Việc thêm một trường mới không ảnh hưởng đến các tài liệu cũ và sẽ rất dễ dàng.
+        <li>Dữ liệu phân tán (Distributed data): Vì nhiều bản sao dữ liệu được lưu trữ trên các máy chủ khác nhau nên
+          việc
+          khôi phục dữ liệu diễn ra tức thì và an toàn ngay cả khi có lỗi phần cứng.
+      </ul>
+      <h2 id="muc3"><b>Các ứng dụng thực tế dùng Node.js và MongoDB </b></h2>
+      <p>Cả Node và MongoDB đều cực kỳ phổ biến và tích cực trong cộng đồng phát triển. Điều này cũng đúng với các doanh
+        nghiệp. Một số tên tuổi lớn nhất trong Fortune 500 đã hoàn toàn chấp nhận Node để cung cấp sức mạnh cho các ứng
+        dụng web của họ. Điều này phần lớn là do bản chất không đồng bộ của Node, khiến nó trở thành một giải pháp thay
+        thế tuyệt vời cho các ứng dụng có lưu lượng truy cập cao, I/O cao như các trang web thương mại điện tử và ứng
+        dụng
+        di động.</p>
+      <p>Đây chỉ là một danh sách nhỏ của một số công ty lớn đang làm việc với Node:</p>
+      <ul>
+        <li>PayPal
+        <li>LinkedIn
+        <li>eBay
+        <li>Walmart
+        <li>Yahoo!
+        <li>Microsoft
+        <li>Dow Jones
+        <li>Uber
+        <li>New York Times
+      </ul>
+      <p>Việc sử dụng MongoDB trong lĩnh vực doanh nghiệp cũng ấn tượng và phổ biến không kém, với ngày càng nhiều công
+        ty
+        dẫn đầu áp dụng máy chủ cơ sở dữ liệu NoSQL. Đây chỉ là một danh sách nhỏ của một số công ty lớn đang làm việc
+        với
+        MongoDB:</p>
+      <ul>
+        <li>Cisco
+        <li>Craigslist Inc.
+        <li>Forbes
+        <li>FourSquare
+        <li>Intuit
+        <li>McAfee
+        <li>MTV
+        <li>MetLife
+        <li>Shutterfly
+        <li>Under Armour
+      </ul>
+
+
+
+
+
+
+
+
+      <div class="w3-center">
+        <div class="pagination">
+          <a href="Bai02.html">Bài tiếp theo</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- End page content -->
+  </div>
+
+  <script src="https://www.jdoodle.com/assets/jdoodle-pym.min.js" type="text/javascript"></script>
+  <script>
+    // Script to open and close sidebar
+    function w3_open() {
+      document.getElementById("mySidebar").style.display = "block";
+      document.getElementById("myOverlay").style.display = "block";
+    }
+
+    function w3_close() {
+      document.getElementById("mySidebar").style.display = "none";
+      document.getElementById("myOverlay").style.display = "none";
+    }
+
+    // Phần button top
+    var mybutton = document.getElementById("myBtn");
+
+
+    window.onscroll = function () { scrollFunction() };
+
+    function scrollFunction() {
+      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        mybutton.style.display = "block";
+      } else {
+        mybutton.style.display = "none";
+      }
+    }
+
+
+    function topFunction() {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    }
+  </script>
+
+</body>
+
+</html>

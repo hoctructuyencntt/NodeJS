@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html>
+<title>Bài 4: Xây dựng web với nền
+  tảng Express (Express Framework)</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="w3.css">
+<link rel="stylesheet" href="font.css">
+<link rel="stylesheet" href="font-awesome.min.css">
+<style>
+  .tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+  }
+
+  /* Style the buttons inside the tab */
+  .tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+  }
+
+  /* Change background color of buttons on hover */
+  .tab button:hover {
+    background-color: #ddd;
+  }
+
+  /* Create an active/current tablink class */
+  .tab button.active {
+    background-color: #ccc;
+  }
+
+  /* Style the tab content */
+  .tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+  }
+
+  i {
+    color: yellow;
+  }
+
+  #myBtn {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    z-index: 99;
+    font-size: 18px;
+    border: none;
+    outline: none;
+    background-color: pink;
+    color: black;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 4px;
+  }
+
+  #myBtn:hover {
+    background-color: #555;
+  }
+
+  .w3-main a {
+    background-color: red;
+  }
+
+  .pagination {
+    display: inline-block;
+  }
+
+  .pagination a {
+    color: white;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+    background-color: gray;
+  }
+
+  .pagination a.active {
+    background-color: gray;
+    color: white;
+    border: 1px solid #4CAF50;
+  }
+
+  .pagination a:hover:not(.active) {
+    background-color: #ddd;
+  }
+
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Raleway", sans-serif
+  }
+
+
+  table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  table td,
+  table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  /*
+  #tab tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+*/
+  table tr:hover {
+    background-color: #ddd;
+  }
+
+  table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #04AA6D;
+    color: white;
+  }
+
+  .center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
+
+  .w3-code a {
+    background-color: transparent;
+    text-decoration: none;
+    color: blue;
+  }
+
+  .video-container {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+
+  .video-container::after {
+    padding-top: 56.25%;
+    display: block;
+    content: '';
+  }
+
+  .video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<body class="w3-black w3-content" style="max-width:1600px">
+
+  <!-- Sidebar/menu -->
+  <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+    <div class="w3-container">
+      <a href="#" style="text-decoration: none;" onclick="w3_close()"
+        class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey" title="Đóng"> X </a>
+      <!--<h4><b>Giáo trình</b></h4>-->
+    </div>
+    <div class="w3-bar-block">
+      <a href="Bai01.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài 1: Giới thiệu
+        Node.js (NodeJS) và MongoDB</a>
+
+      <a href="Bai02.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài 2: Viết ứng dụng đầu tiên
+        với Node.js và MongoDB</a>
+
+      <a href="Bai03.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài 3: Các khái niệm và thao
+        tác cơ bản trong Node.js và MongoDB</a>
+      <a href="Baitap03.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài tập</a>
+      <a href="Bai04.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding w3-text-teal">Bài 4: Xây dựng
+        web với nền
+        tảng Express (Express Framework)</a>
+      <a href="Baitap04.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài tập</a>
+      <a href="Baitap05.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài 5: Xây dựng ứng dụng web
+        hướng máy chủ</a>
+      <a href="Baitap05.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài tập</a>
+      <a href="Thamkhao.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài 6: Kiểm thử và triển
+        khai ứng dụng web</a>
+    </div>
+  </nav>
+
+  <!-- Overlay effect when opening sidebar on small screens -->
+  <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer"
+    title="close side menu" id="myOverlay">=</div>
+
+  <!-- !PAGE CONTENT! -->
+  <div class="w3-main" style="margin-left:300px">
+    <button onclick="topFunction()" id="myBtn" title="Go to top">Lên đầu trang</button>
+    <!-- Header -->
+    <header id="portfolio">
+      <!--<a href="#"><img src="/w3images/avatar_g2.jpg" style="width:65px;"
+          class="w3-circle w3-right w3-margin w3-hide-large w3-hover-opacity"></a>-->
+      <span class="w3-button w3-hide-large w3-xxlarge w3-hover-text-grey" onclick="w3_open()">=</span>
+      <div class="w3-container">
+        <h1><b>Bài 4: Xây dựng web với nền
+            tảng Express (Express Framework)</b></h1>
+        <div class="w3-section w3-bottombar"></div>
+      </div>
+    </header>
+
+    <div class="w3-container w3-padding-large" style="margin-bottom:32px">
+      <div class="w3-center">
+        <div class="pagination">
+          <a href="Bai03.html">Bài trước</a>
+          <a href="Bai05.html">Bài tiếp theo</a>
+        </div>
+      </div>
+      <div class="w3-code notranslate htmlHigh">
+        <h4>Nội dung bài học</h4>
+        <ol>
+          <li><a href="#muc1">Các nền tảng ứng dụng web (Web Application Frameworks)</a>
+          </li>
+          <li><a href="#muc2">Làm quen mô hình MVC (Model - View - Controller)</a>
+
+          </li>
+          <li><a href="#muc3">Giới thiệu Express.js</a>
+          </li>
+          <li><a href="#muc4">Các khái niệm và thao tác cơ bản khi làm việc với Express.js</a>
+            <ul>
+              <li><a href="#muc4_1">Tạo ứng dụng đầu tiên với Express</a>
+              <li><a href="#muc4_2">Route</a>
+              <li><a href="#muc4_3">Middleware</a>
+              <li><a href="#muc4_4">Template engine</a>
+              <li><a href="#muc4_5">Error handling</a>
+            </ul>
+          </li>
+          <li><a href="#muc5">Dự án ứng dụng với Express và mô hình MVC</a>
+        </ol>
+      </div>
+
+      <h3 id="muc1"><b>Các nền tảng ứng dụng web (Web Application Frameworks)</b></h3>
+      <p>Khái niệm "web application framework" (nền tảng hay khung ứng dụng web) là một tập hợp các công cụ, thư viện,
+        quy tắc và mô
+        hình thiết kế đã được xây dựng trước để giúp phát triển ứng dụng web một cách hiệu quả và có cấu trúc. Các
+        framework này cung cấp một nền tảng để xây dựng ứng dụng web bằng cách giảm bớt công việc lặp lại và cung cấp
+        giải
+        pháp chuẩn để giải quyết các vấn đề phổ biến.</p>
+
+      <p>Một số đặc điểm quan trọng của web application framework bao gồm:</p>
+      <ul>
+
+        <li>Cấu trúc tổ chức: Framework thường định rõ cách tổ chức dự án và mã nguồn, bao gồm việc sắp xếp các tệp, thư
+          mục,
+          và mô hình dữ liệu. Điều này giúp dự án dễ quản lý và bảo trì.
+
+        <li>Quy tắc và mô hình thiết kế: Framework thường định rõ các quy tắc và mô hình thiết kế cho việc phát triển
+          ứng
+          dụng. Điều này bao gồm cách xử lý yêu cầu, tạo giao diện người dùng, quản lý dữ liệu, và nhiều khía cạnh khác
+          của
+          ứng dụng web.
+
+        <li>Các công cụ hỗ trợ: Framework thường đi kèm với các công cụ hỗ trợ như thư viện, mã nguồn mẫu, và tiện ích
+          giúp
+          giảm thời gian phát triển và tối ưu hóa hiệu suất.
+
+        <li>Bảo mật: Framework cung cấp cơ chế bảo mật để bảo vệ ứng dụng khỏi các lỗ hổng bảo mật phổ biến như tấn công
+          SQL
+          Injection, Cross-Site Scripting (XSS), và Cross-Site Request Forgery (CSRF).
+
+        <li>Tiêu chuẩn hóa: Framework thường tuân theo các tiêu chuẩn và quy định phát triển phổ biến như RESTful API,
+          MVC
+          (Model-View-Controller), và URL routing.
+      </ul>
+      <p>Ví dụ về một web application framework phổ biến là <a href="https://rubyonrails.org/">Ruby on Rails</a> (được
+        viết bằng ngôn ngữ Ruby) hay <a href="https://expressjs.com/">Express</a>
+        (được viết bằng ngôn ngữ Javascript).</p>
+      <p>Express.js là một framework phát triển ứng dụng web phía máy chủ (backend) được xây dựng trên <a href="">nền
+          tảng Node.js</a>.
+        Nó
+        giúp đơn giản hóa quá trình xây dựng các ứng dụng web bằng cách cung cấp các tính năng mạnh mẽ và gọn nhẹ.</p>
+      <p>Express.js cho phép chúng ta xây dựng các ứng dụng web và API một cách nhanh chóng và dễ dàng. Nó tuân thủ <a
+          href="">mô hình
+          MVC
+          (Model-View-Controller)</a>, tách biệt các phần khác nhau của ứng dụng như xử lý yêu cầu, xử lý logic và hiển
+        thị dữ
+        liệu. Điều này giúp giảm độ phức tạp của ứng dụng và tăng khả năng bảo trì và mở rộng trong tương lai.</p>
+      <h3 id="muc2"><b>Làm quen mô hình MVC (Model - View - Controller)</b></h3>
+      <p>Mô hình MVC (Model-View-Controller) là một kiến trúc thiết kế phổ biến trong phát triển ứng dụng web, bao gồm
+        Express.js. Mô hình này giúp tổ chức và quản lý mã nguồn một cách hiệu quả bằng cách chia ứng dụng thành ba phần
+        chính: Model, View và Controller.</p>
+
+      <p>Dưới đây là mô tả chi tiết về mô hình MVC trong Express:</p>
+      <ul>
+        <li><i>Model (M)</i>:
+
+          Model đại diện cho dữ liệu và quản lý cách dữ liệu được truy cập và sử dụng trong ứng dụng.
+          Trong Express, Model thường tương ứng với tầng dữ liệu (data layer), bao gồm các tệp và thư mục liên quan đến
+          truy
+          cập và quản lý cơ sở dữ liệu, các tương tác với dữ liệu như đọc, ghi, cập nhật và xóa.
+          Model không trực tiếp tương tác với người dùng mà thay vào đó nó cung cấp các API hoặc phương thức để
+          Controller
+          sử dụng để truy cập dữ liệu.
+        <li><i>View (V)</i>:
+
+          View đại diện cho giao diện người dùng và hiển thị dữ liệu cho người dùng cuối.
+          Trong Express, View thường tương ứng với các file HTML, template engine như Handlebars, Pug, hoặc EJS được sử
+          dụng
+          để tạo ra các trang web động.
+          View không nên chứa logic kinh doanh hoặc tương tác với cơ sở dữ liệu; nhiệm vụ chính của nó là hiển thị thông
+          tin
+          cho người dùng.
+        <li><i>Controller (C)</i>:
+
+          Controller là thành phần trung gian giữa Model và View. Nó kiểm soát luồng dữ liệu và xử lý các yêu cầu từ
+          người
+          dùng.
+          Trong Express, Controller thường là các hàm hoặc middleware được đăng ký cho các route cụ thể. Controller nhận
+          yêu
+          cầu từ người dùng, tương tác với Model để lấy hoặc cập nhật dữ liệu, sau đó chọn View thích hợp để hiển thị dữ
+          liệu đó cho người dùng.
+          Controller chịu trách nhiệm xử lý logic kinh doanh, kiểm tra quyền truy cập, và thực hiện các hoạt động xử lý
+          yêu
+          cầu.
+      </ul>
+      <p>Ví dụ minh họa:</p>
+      <ul>
+        <li>Khi người dùng truy cập trang /users trong ứng dụng Express, một yêu cầu GET được gửi đến server.
+        <li>Controller xử lý yêu cầu này bằng cách gọi Model để lấy danh sách người dùng từ cơ sở dữ liệu.
+        <li>Sau đó, Controller chọn View thích hợp (ví dụ: một trang web HTML) và truyền dữ liệu người dùng vào View để
+          hiển
+          thị danh sách người dùng cho người dùng cuối.
+      </ul>
+      <p>Mô hình MVC giúp tách biệt logic ứng dụng thành các phần riêng biệt, giúp dễ quản lý, bảo trì và mở rộng ứng
+        dụng
+        web.</p>
+      <h3 id="muc3"><b>Giới thiệu Express.js</b></h3>
+      <p>Express.js là một framework phát triển ứng dụng web phía máy chủ (backend) được xây dựng trên nền tảng Node.js.
+        Nó
+        giúp đơn giản hóa quá trình xây dựng các ứng dụng web bằng cách cung cấp các tính năng mạnh mẽ và gọn nhẹ.</p>
+      <p>Express.js cho phép chúng ta xây dựng các ứng dụng web và API một cách nhanh chóng và dễ dàng. Nó tuân thủ mô
+        hình
+        MVC
+        (Model-View-Controller), tách biệt các phần khác nhau của ứng dụng như xử lý yêu cầu, xử lý logic và hiển thị dữ
+        liệu. Điều này giúp giảm độ phức tạp của ứng dụng và tăng khả năng bảo trì và mở rộng trong tương lai.</p>
+      <p>Các khái niệm cơ bản của Express.js bao gồm:</p>
+      <ul>
+        <li><i>Middleware</i>: Middleware là các hàm được chạy trong quá trình xử lý yêu cầu. Nó có thể thực hiện các
+          tác vụ như xử
+          lý và phân tích yêu cầu, kiểm tra quyền truy cập và ghi lại lỗi. Express.js cho phép chúng ta tạo và sử dụng
+          middleware
+          một cách linh hoạt, giúp tăng tính linh hoạt và tái sử dụng code.
+        <li>
+          <i>Route</i>: Express.js cho phép chúng ta xác định các route (đường dẫn) cho ứng dụng của chúng ta. Mỗi route
+          sẽ định
+          nghĩa một
+          URL cụ thể và xử lý các yêu cầu tương ứng. Bằng cách sử dụng route, chúng ta có thể xác định các hành động cụ
+          thể
+          khi
+          người dùng truy cập vào các đường dẫn khác nhau trên ứng dụng của chúng ta.
+        <li>
+          <i>Template engine</i>: Express.js không đi kèm với một template engine mặc định, nhưng nó cho phép chúng ta
+          sử
+          dụng bất kỳ
+          template engine nào chúng ta thích như EJS, Pug, Handlebars, và nhiều hơn nữa. Template engine giúp chúng ta
+          xây dựng và
+          hiển thị các trang web động bằng cách kết hợp dữ liệu từ máy chủ với các template được định nghĩa trước.
+        <li>
+          <i>Error handling</i>: Express.js cung cấp một cách tiếp cận dễ dùng để xử lý và quản lý lỗi trong ứng dụng
+          của chúng ta.
+          Bằng cách sử dụng middleware và các hàm xử lý lỗi, chúng ta có thể tùy chỉnh việc xử lý lỗi theo ý muốn, bao
+          gồm
+          ghi
+          log lỗi, trả về mã lỗi và thông báo tương ứng cho người dùng.
+      </ul>
+      <p>Express.js là một framework mạnh mẽ và phổ biến trong cộng đồng phát triển web. Nó giúp chúng ta xây dựng các
+        ứng
+        dụng
+        web phía máy chủ một cách nhanh chóng, linh hoạt và dễ dàng mở rộng. Sau đây chúng ta sẽ tìm hiểu chi tiết về
+        các khái niệm và thao tác trong Express.</p>
+      <h3 id="muc4"><b>Các khái niệm và thao tác cơ bản khi làm việc với Express.js</b></h3>
+      <h4 id="muc4_1">Tạo ứng dụng đầu tiên với Express</h4>
+      <div class="tab">
+        <button class="tablinks active" onclick="myTab(event, 'vsc')">Visual Studio Code</button>
+        <button class="tablinks" onclick="myTab(event, 'glitch')">Glitch</button>
+      </div>
+      <div id="vsc" class="tabcontent" style="display: block;">
+        <p>Trong thư mục <i>MyNodeJS</i> tạo thư mục <i>EXPRESS</i> chứa các tập tin liên quan ứng dụng Express.</p>
+        <p>Trong VS Code mở <i>Terminal</i> và điều hướng đến thư mục <i>EXPRESS</i> trên.</p>
+        <p>Khởi tạo ứng dụng Express dùng lệnh: <i>npm init -y</i></p>
+        <p>Lệnh trên sẽ tạo ra một tập tin <i>package.json</i> trong thư mục EXPRESS, nơi chúng ta có thể quản lý các
+          phụ thuộc và cấu
+          hình ứng dụng của mình.</p>
+        <img class="center" src="img/bai4_01.png">
+        <p>Cài đặt Express bằng cách gõ lệnh: <i>npm install express</i></p>
+        <img class="center" src="img/bai4_02.png">
+        <p>Lệnh trên sẽ cài đặt Express và các phụ thuộc của nó vào thư mục <i>node_modules</i> trong ứng dụng của chúng
+          ta.</p>
+        <p>Tạo tập tin tên app.js trong thư mục EXPRESS để cấu hình ứng dụng Express với nội dung sau:</p>
+        <script src="https://gist.github.com/hoctructuyencntt/d48c81fc82ce9014b3fa7da6b8bc4b29.js"></script>
+        <p>Trong đoạn mã trên, chúng ta đã tạo một ứng dụng Express, định nghĩa một <i>route</i> (sẽ tìm hiểu chi tiết
+          hơn trong phần tiếp theo của bài này) cho đường dẫn gốc / và trả về một
+          thông báo "Hello, Express!" khi có yêu cầu đến.</p>
+        <p>Chạy ứng dụng Express bằng cách thực thi lệnh sau để khởi động máy chủ và lắng nghe yêu cầu: <i>node
+            app.js</i></p>
+        <img class="center" src="img/bai4_03.png">
+        <p>Bây giờ, chúng ta có thể truy cập vào http://localhost:3000 trên trình duyệt để xem thông báo "Hello,
+          Express!".
+        </p>
+        <img class="center" src="img/bai4_04.png">
+        <p>Trên đây là các bước cơ bản để cài đặt và tạo ứng dụng đầu tiên với Express.js. Chúng ta có thể tiếp tục mở
+          rộng ứng dụng
+          và thêm các route và logic xử lý theo yêu cầu của mình trong các phần sau.</p>
+      </div>
+      <div id="glitch" class="tabcontent">
+        <p>Truy cập <a href="https://glitch.com/discover">Glitch</a> và chọn dự án <a
+            href="https://glitch.com/edit/#!/abrupt-fortunate-amount">Hello Node</a>.</p>
+        <p>Chọn <i>Terminal</i> và gõ lệnh <i>npm install express</i> để cài Express.</p>
+        <p>Sao chép nội dung từ tập tin <i>app.js</i> để thay thế nội dung mặc định trong tập tin
+          <i>server.js</i>. Xem và
+          kiểm tra kết quả từ khung bên phải.
+        </p>
+        <p>Chú ý: Chúng ta có thể tạo một tập tin tên <i>app.js</i> nhưng cần cấu hình lại trong tập tin
+          <i>package.json</i> của <a href="https://glitch.com/discover">Glitch</a>.
+        </p>
+      </div>
+      <h4 id="muc4_2">Route</h4>
+      <p>Trong Express.js, khái niệm <i>Route</i> đóng vai trò quan trọng trong việc xác định cách xử lý yêu cầu HTTP từ
+        client
+        đến server. Một <i>route</i> được xác định bởi một đường dẫn (URL) và một phương thức HTTP tương ứng (GET, POST,
+        PUT,
+        DELETE, vv.). Khi có một yêu cầu được gửi đến server, Express.js sẽ kiểm tra các route đã được định nghĩa để tìm
+        ra route phù hợp và thực hiện xử lý tương ứng.</p>
+      <p> Một <i>route</i> trong Express.js có thể được định nghĩa bằng cách sử dụng phương thức tương ứng của ứng dụng
+        Express
+        (get(), post(), put(), delete(), vv.). Mỗi phương thức này nhận vào hai tham số: đường dẫn và một hàm xử lý
+        (handler) để thực hiện khi <i>route</i> được truy cập.</p>
+      <p>Dưới đây là một ví dụ hoàn chỉnh về việc sử dụng <i>route</i> trong Express.js:</p>
+      <script src="https://gist.github.com/hoctructuyencntt/6dcf8bb4741b00a3fc1d5c3674fda7c1.js"></script>
+      <p>Lưu đoạn mã trên thành tập tin express_route.js trong thư mục EXPRESS. Gõ lệnh: <i>node express_route.js</i>
+      </p>
+      <img class="center" src="img/bai4_05.png">
+      <p>Truy cập vào http://localhost:3000 trên trình duyệt:</p>
+      <img class="center" src="img/bai4_06.png">
+      <p>Truy cập vào http://localhost:3000/about trên trình duyệt:</p>
+      <img class="center" src="img/bai4_07.png">
+      <p>Truy cập vào http://localhost:3000/users?name=Minh trên trình duyệt:</p>
+      <img class="center" src="img/bai4_08.png">
+      <p>Chú ý: Chúng ta có thể thực hiện trên <a href="https://glitch.com/discover">Glitch</a> tương tự ví dụ Tạo ứng
+        dụng Express đầu tiên ở trên.</p>
+      <p>Trong ví dụ trên:</p>
+      <ul>
+        <li>Route đầu tiên được định nghĩa cho đường dẫn gốc /, và khi có yêu cầu GET đến đường dẫn này, server sẽ gửi
+          phản
+          hồi "Trang chủ" trở lại cho client.
+        <li>Route thứ hai được định nghĩa cho đường dẫn /about, và khi có yêu cầu GET đến đường dẫn này, server sẽ gửi
+          phản
+          hồi "Trang giới thiệu" trở lại cho client.
+        <li>Route thứ ba được định nghĩa cho đường dẫn /users, và khi có yêu cầu GET đến đường dẫn này với query
+          parameter
+          name, server sẽ gửi phản hồi "Xin chào, {name}" trở lại cho client.
+        <li>Route cuối cùng được sử dụng làm route mặc định, nghĩa là nếu không tìm thấy bất kỳ route phù hợp nào,
+          server sẽ
+          gửi phản hồi "Không tìm thấy trang" với mã lỗi 404.
+      </ul>
+      Thông qua việc định nghĩa và sử dụng các route, chúng ta có thể xử lý các yêu cầu từ client tới server theo nhu
+      cầu của
+      ứng dụng Express của mình.
+      <h4 id="muc4_3">Middleware</h4>
+      <p>Trong Express.js, Middleware là các hàm được chạy tuần tự trên đường đi của yêu cầu HTTP từ client tới server.
+        Nó
+        cho phép chúng ta thực hiện các tác vụ như xử lý yêu cầu, trung gian ghi log, kiểm tra quyền truy cập, xử lý lỗi
+        và
+        nhiều hơn nữa. Middleware giúp tách biệt logic xử lý thành các bước nhỏ và tái sử dụng code một cách dễ dàng.
+        Cách sử dụng Middleware trong Express.js:</p>
+      <ul>
+        <li>Sử dụng phương thức <i>app.use()</i> để đăng ký middleware với ứng dụng Express.
+        <li>Middleware có thể là một hàm đơn giản nhận vào ba tham số: <i>req (request)</i>, <i>res (response)</i> và
+          <i>next</i>.
+        <li>Trong middleware, chúng ta có thể xử lý yêu cầu, thay đổi thông tin yêu cầu hoặc phản hồi, và chuyển quyền
+          điều
+          khiển
+          cho middleware tiếp theo bằng cách gọi <i>next()</i>.
+      </ul>
+      <p>Dưới đây là một ví dụ hoàn chỉnh về việc sử dụng và viết Middleware trong Express.js:</p>
+      <script src="https://gist.github.com/hoctructuyencntt/186ebf6fad0882873f2a52d87821c7f5.js"></script>
+      <p>Lưu đoạn mã trên thành tập tin <i>express_middleware.js</i> trong thư mục EXPRESS. Gõ lệnh: <i>node
+          express_middleware.js</i></p>
+      <p>Truy cập vào http://localhost:3000 trên trình duyệt:</p>
+      <img class="center" src="img/bai4_09.png">
+      <p>Chú ý: Chúng ta có thể thực hiện trên <a href="https://glitch.com/discover">Glitch</a> tương tự ví dụ Tạo ứng
+        dụng Express đầu tiên ở trên.</p>
+      <p>Trong ví dụ này:</p>
+      <ul>
+        <li>Chúng ta import Express và tạo một ứng dụng Express bằng cách gọi <i>express()</i>.
+        <li>Chúng ta đăng ký một Middleware sử dụng <i>app.use()</i> để ghi log thông tin về mỗi yêu cầu đến server.
+          Middleware
+          này
+          được thực thi mỗi khi có một yêu cầu HTTP đến server. Nó in ra đường dẫn (req.url) của yêu cầu và sau đó
+          chuyển
+          quyền điều khiển cho Middleware tiếp theo hoặc route chính bằng cách gọi <i>next()</i>.
+        <li>Chúng ta đăng ký một route chính sử dụng <i>app.get()</i> để xử lý yêu cầu GET đến đường dẫn / và gửi một
+          phản hồi
+          đơn
+          giản "Chào mừng đến với ứng dụng Express!".
+        <li>Cuối cùng, chúng ta khởi động server và lắng nghe yêu cầu tại cổng 3000.
+      </ul>
+      <p>Khi chúng ta chạy ứng dụng này và truy cập địa chỉ http://localhost:3000 trong trình duyệt, chúng ta sẽ thấy
+        rằng
+        Middleware
+        đã ghi log thông tin về yêu cầu đến server mỗi khi chúng ta truy cập trang. Middleware là một cách mạnh mẽ để
+        thêm
+        các
+        chức năng trung gian vào ứng dụng Express của chúng ta, như xác thực, ghi log, kiểm tra quyền truy cập và nhiều
+        công
+        việc khác.</p>
+      <h4 id="muc4_4">Template engine</h4>
+      <p>Trong Express.js, <i>Template engine (bộ công cụ mẫu)</i> là một công cụ giúp chúng ta tạo ra các trang HTML
+        động
+        dựa trên
+        dữ
+        liệu được truyền vào từ ứng dụng. Template engine cho phép chúng ta kết hợp HTML tĩnh với các dữ liệu động, điều
+        này
+        giúp rất nhiều trong việc tạo các trang web động và tái sử dụng các thành phần giao diện.</p>
+      <p>Express.js cung cấp nhiều loại template engine khác nhau để tạo ra các trang HTML động (Tham khảo các template
+        engine <a href="https://expressjs.com/en/resources/template-engines.html">tại đây</a>). Dưới
+        đây
+        là một số loại template engine phổ biến:</p>
+      <ul>
+        <li><i>Pug (trước đây là Jade):</i> là một template engine sử dụng cú pháp đơn giản và gọn gàng dưới dạng
+          indentations (thụt dòng)
+          để định nghĩa HTML. Tham khảo thêm về Pug <a href="https://pugjs.org/api/getting-started.html">tại đây</a>.
+        <li><i>EJS (Embedded JavaScript):</i> cho phép chúng ta nhúng mã JavaScript trực tiếp vào trong template HTML.
+        <li><i>Handlebars:</i> sử dụng cú pháp đơn giản và cho phép chúng ta tạo các biểu đồ, điều kiện và lặp trong
+          template.
+        <li><i>Mustache:</i> cũng là một template engine tương tự Handlebars và cho phép chúng ta định nghĩa template
+          đơn
+          giản.
+        <li><i>Nunjucks:</i> là một template engine mạnh mẽ với nhiều tính năng như kế thừa (inheritance), biểu đồ, và
+          sự mở rộng
+          của biểu thức.
+      </ul>
+      <p>Mỗi loại template engine có cú pháp và tính năng riêng biệt. Lựa chọn loại nào phụ thuộc vào sở thích và nhu
+        cầu
+        cụ thể của chúng ta. Express cho phép chúng ta dễ dàng tích hợp bất kỳ template engine nào chúng ta chọn thông
+        qua việc cài đặt
+        và cấu hình phù hợp. Sau đây là minh họa cách sử dụng 2 kiểu template engine Pug và Handlebars (Sử dụng VS Code,
+        trong Glitch tương tự các ví dụ trên).</p>
+      <div class="tab">
+        <button class="tablinks active" onclick="myTab(event, 'pug')">Pug</button>
+        <button class="tablinks" onclick="myTab(event, 'hb')">Handlebars</button>
+      </div>
+      <div id="pug" class="tabcontent" style="display: block;">
+        <p>Như <a href="https://expressjs.com/en/guide/using-template-engines.html">mô tả cách sử dụng Pug</a>, chúng ta
+          cần tạo thư mục <i>views</i> trong thư mục <i>EXPRESS</i> để chứa các tập tin có phần
+          mở rộng là <i>.pug</i></p>
+        <p>Mở Terminal từ VS Code và điều hướng đến thư mục MyNodeJS/EXPRESS.</p>
+        <p>Cài đặt Template engine Pug dùng lệnh: <i>npm install pug</i>
+        </p>
+        <p>Trong thư mục <i>EXPRESS</i> tạo tập tin <i>express_pug.js</i> có nội dung sau:</p>
+        <script src="https://gist.github.com/hoctructuyencntt/c62db283502ce3d08d8d79a5d95cca03.js"></script>
+        <p>Trong thư mục <i>EXPRESS</i> tạo thư mục tên <i>views</i> chứa tập tin <i>index.pug</i> có nội dung sau:</p>
+        <script src="https://gist.github.com/hoctructuyencntt/dd91f7e627c2223c36fec5c18d313b90.js"></script>
+        <p>Thực thi ứng dụng: <i>node express_pug.js</i>. Truy cập http://localhost:3000 xem kết quả</p>
+        <img class="center" src="img/bai4_10.png">
+      </div>
+      <div id="hb" class="tabcontent">
+        <p>Như <a href="https://www.npmjs.com/package/express-handlebars">mô tả cách sử dụng Express Handlebars</a>,
+          Express sẽ tìm thư mục <i>views</i> chứa tập tin <i>home.handlebars</i> (hay <i>index.handlebars</i>) và thư
+          mục con <i>layouts</i> chứa
+          tập tin mặc định <i>main.handlebars</i>. Trong ví dụ này chúng ta không cần dùng thư mục layouts nên sẽ phải
+          cấu hình
+          lại dùng <i>layoutsDir</i> và <i>defaultLayout</i>.</p>
+        <p>Mở Terminal từ VS Code và điều hướng đến thư mục MyNodeJS/EXPRESS.</p>
+        <p>Cài đặt Template engine Pug dùng lệnh: <i>npm install express-handlebars
+          </i>. Chú ý phiên bản express-handlebars hiện tại có thể không tương thích với phiên bản Node chúng ta đang
+          dùng
+          (cũ hơn). Lúc này chúng ta cần cài express-handlebars với phiên bản thấp hơn dùng lệnh: <i>npm install
+            express-handlebars@version</i> với <i>version</i> là số hiệu phiên bản chúng ta muốn cài đặt. Tham khảo chi
+          tiết
+          các
+          <a href="https://www.npmjs.com/package/express-handlebars?activeTab=versions">phiên bản của
+            express-handlebars</a>.
+        </p>
+        <p>Trong thư mục <i>EXPRESS</i> tạo tập tin <i>express_handlebars.js</i> có nội dung sau:</p>
+        <script src="https://gist.github.com/hoctructuyencntt/ee982b94aadda30116f24d4c687b630f.js"></script>
+        <p>Trong thư mục <i>EXPRESS</i> tạo thư mục tên <i>views</i> chứa tập tin <i>index.handlebars</i> có nội dung
+          sau:</p>
+        <script src="https://gist.github.com/hoctructuyencntt/eca1e7d86dac6c98dc6275120160fdf5.js"></script>
+        <p>Thực thi ứng dụng: <i>node express_handlebars.js</i>. Truy cập http://localhost:3000 xem kết quả</p>
+        <img class="center" src="img/bai4_10.png">
+      </div>
+
+      <h4 id="muc4_5">Error handling</h4>
+      <p>Error handling (xử lý lỗi) trong Express là việc quản lý và xử lý các ngoại lệ (exceptions) và lỗi trong ứng
+        dụng
+        Express.js. Khi một lỗi xảy ra trong quá trình xử lý yêu cầu HTTP, Express sẽ quản lý nó và chuyển nó đến
+        middleware hoặc hàm xử lý lỗi để tạo phản hồi phù hợp cho client.</p>
+      <p>Dưới đây là một ví dụ về cách sử dụng error handling trong Express:</p>
+      <script src="https://gist.github.com/hoctructuyencntt/8fa338813f99bdd062c4f6b874e65327.js"></script>
+      <p>Lưu đoạn mã trên thành tập tin <i>express_errorhandling.js</i> trong thư mục EXPRESS. Để ý rằng chúng ta có yêu
+        cầu dùng thư viện <i>body-parser</i> trong Express để phân tích dữ liệu từ form HTML
+        nên chúng ta cần cài thư viện này dùng lệnh: <i>npm install express body-parser
+        </i>
+      </p>
+      <p>Gõ lệnh: <i>node
+          express_errorhandling.js</i>.</p>
+
+      <p>Chúng ta định nghĩa một route <i>/divide</i>, mà khi được truy cập, kiểm tra xem giá trị <i>dividend</i> và
+        <i>divisor</i> từ yêu
+        cầu
+        có hợp lệ hay không. Nếu không hợp lệ, chúng ta tạo một lỗi và chuyển nó đến middleware xử lý lỗi thông qua
+        <i>next(error)</i>.
+      </p>
+
+      <p>Middleware xử lý lỗi được đăng ký bằng cách sử dụng <i>app.use()</i>. Nó nhận lỗi thông qua tham số <i>err</i>
+        và tạo một
+        phản
+        hồi lỗi với mã trạng thái và thông báo lỗi.</p>
+
+      <p>Khi chúng ta truy cập <i>/divide</i> với <i>divisor</i> bằng 0 hoặc không có <i>dividend</i> và <i>divisor</i>,
+        chúng ta sẽ nhận được phản hồi
+        lỗi
+        với
+        mã trạng thái <i>400 Bad Request</i> và thông báo lỗi <i>"Invalid input"</i>. Nếu có lỗi xảy ra trong quá trình
+        xử lý yêu cầu,
+        Express sẽ tự động chuyển nó đến middleware xử lý lỗi.</p>
+      <p>Truy cập vào http://localhost:3000 trên trình duyệt chúng ta sẽ thấy một biểu mẫu cho phép nhập giá trị
+        dividend
+        và divisor</p>
+      <img class="center" src="img/bai4_11.png">
+
+      <p>Sau khi chúng ta nhập giá trị và nhấn nút "Submit," ứng dụng sẽ kiểm tra và hiển thị kết quả hoặc thông
+        báo lỗi tương ứng. Ví dụ nhập ô trên là 1, ô dưới là 0:</p>
+      <img class="center" src="img/bai4_12.png">
+      <p>Sẽ nhận lỗi khi nhấn nút Submit:</p>
+      <img class="center" src="img/bai4_13.png">
+
+      <p>Như vậy chúng ta đã trải qua những vấn đề cơ bản nhất trong Express như mô hình MVC, các khái niệm route,
+        middleware, template-engines, error handling. Sau đây chúng ta sẽ kết hợp các kiến thức đã học để xây dựng một
+        dự án website.</p>
+      <h3 id="muc5"><b>Dự án ứng dụng với Express và mô hình MVC</b></h3>
+      <p>Dưới đây là một ví dụ về một dự án hoàn chỉnh sử dụng Express, mô hình MVC (Model-View-Controller), route,
+        middleware, template engine (Pug và Handlebars), và error handling. Dự án này là một ứng dụng web đơn giản cho
+        phép người dùng nhập hai số và thực hiện các phép toán cơ bản trên chúng (cộng, trừ, nhân, chia).</p>
+      <p>Trước khi bắt đầu, trong thư mục gốc dự án của chúng ta cần cài đặt đầy đủ các thư viện như Express, Pug,
+        Handlebars, body-parser. Nếu chúng ta đang dùng thư mục EXPRESS thì không cần cài đặt thêm.</p>
+      <p>Giả sử chúng ta dùng thư mục EXPRESS. Trong thư mục này, tạo thư mục dự án tên <i>my-express-app</i> và tạo các
+        thư mục dự án và tạo các
+        tập tin JS
+        theo cấu trúc sau:</p>
+      <img class="center" src="img/bai4_14.png">
+      <p>Cơ chế hoạt động của Express trong cấu trúc ứng dụng của chúng ta (my-express-app) như sau:</p>
+      <ul>
+        <li>Tạo ứng dụng Express: Tệp <i>app.js</i> là nơi chúng ta tạo và cấu hình ứng dụng Express. Dòng mã <i>const
+            app =
+            express();</i>
+          tạo
+          một instance của Express. Sau đó, chúng ta cấu hình ứng dụng bằng cách thêm các middleware và cài đặt cơ bản
+          như
+          định
+          nghĩa template engine và xử lý lỗi.
+
+        <li>Middleware: Express sử dụng middleware để xử lý các yêu cầu HTTP. Trong ứng dụng của chúng ta, chúng ta đã
+          sử dụng
+          middleware <i>body-parser</i> để phân tích và trích xuất dữ liệu từ các yêu cầu POST. Chúng ta cũng đã sử dụng
+          middleware
+          <i>express.static</i> để phục vụ các tệp tĩnh như CSS từ thư mục <i>public</i>.
+
+        <li>Routing và Controllers: Thư mục controllers chứa các tệp controller, trong trường hợp này là
+          <i>calculatorController.js</i>. Trong tệp này, chúng ta đã định nghĩa các route và xử lý tương ứng cho chúng
+          bằng
+          cách sử
+          dụng
+          <i>express.Router()</i>. Ví dụ: <i>router.get('/', ...)</i> xử lý yêu cầu GET đến đường dẫn gốc,
+          <i>router.post('/calculate',
+            ...)</i>
+          xử lý yêu cầu POST đến đường dẫn <i>/calculate</i>.
+
+        <li>Models: Thư mục <i>models</i> chứa các tệp model, trong trường hợp này là <i>calculatorModel.js</i>. Model
+          này chứa logic
+          xử lý
+          tính toán. Controllers sử dụng model để thực hiện các phép tính và trả về kết quả cho người dùng.
+
+        <li>Views và Template Engine: Thư mục <i>views</i> chứa các tệp template, trong trường hợp này là
+          <i>calculator.pug</i>. chúng
+          ta
+          đã cấu
+          hình Express để sử dụng Pug làm template engine thông qua <i>app.set('view engine', 'pug')</i>. Controllers sử
+          dụng
+          template engine để tạo ra nội dung HTML động dựa trên dữ liệu và trả về cho trình duyệt.
+
+        <li>Giao tiếp: Khi người dùng truy cập ứng dụng của chúng ta thông qua trình duyệt, Express nhận các yêu cầu
+          HTTP và
+          chuyển
+          chúng đến các route tương ứng được định nghĩa trong <i>controllers</i>. <i>Controllers</i> sau đó tương tác
+          với <i>models</i> để
+          thực
+          hiện các thao tác cần thiết (trong trường hợp này, tính toán) và sử dụng template engine để tạo nội dung HTML
+          trả
+          về cho trình duyệt.
+
+        <li>Phản hồi cho trình duyệt: <i>Controllers</i> trả về các phản hồi HTTP cho trình duyệt, bao gồm HTML được tạo
+          bởi
+          template
+          engine. Trình duyệt hiển thị nội dung này cho người dùng.
+
+        <li>Tệp tĩnh và CSS: Thư mục <i>public</i> chứa các tệp tĩnh như CSS (trong trường hợp này là
+          <i>styles.css</i>). Express sử
+          dụng
+          middleware <i>express.static</i> để phục vụ các tệp tĩnh này trực tiếp từ trình duyệt của người dùng.
+
+        <li>Lắng nghe yêu cầu: Cuối cùng, Express sử dụng <i>app.listen</i> để lắng nghe yêu cầu từ trình duyệt trên một
+          cổng
+          cụ thể
+          (trong trường hợp này là cổng 3000). Khi một yêu cầu đến, Express xác định route tương ứng và chuyển yêu cầu
+          đó
+          đến controller để xử lý. Sau đó, kết quả được gửi lại cho trình duyệt.
+      </ul>
+      <p>Có thể tạm hình dung một cách trực quan:</p>
+      <img class="center" src="img/bai4_15.png">
+      <p>Nội dung <i>app.js</i>: (Chú ý đọc kỹ các chú thích mỗi dòng mã để hiểu hơn)</p>
+      <script src="https://gist.github.com/hoctructuyencntt/b431954e47a4ed6833bb5b7656791beb.js"></script>
+      <p>Nội dung <i>calculatorController.js</i>: (Chú ý đọc kỹ các chú thích mỗi dòng mã để hiểu hơn)</p>
+      <script src="https://gist.github.com/hoctructuyencntt/8d168d2eee05cc7180e102e3f3bd20ad.js"></script>
+      <p>Nội dung <i>calculatorModel.js</i>: (Chú ý đọc kỹ các chú thích mỗi dòng mã để hiểu hơn)</p>
+      <script src="https://gist.github.com/hoctructuyencntt/00aa790b3ddb83977658109959864806.js"></script>
+      <p>Nội dung <i>calculator.pug</i>: (Chú ý đọc kỹ các chú thích mỗi dòng mã để hiểu hơn)</p>
+      <script src="https://gist.github.com/hoctructuyencntt/fe697f20bee8caeee6c5fe5ee416154b.js"></script>
+      <p>Nội dung <i>styles.css</i>: (Chú ý đọc kỹ các chú thích mỗi dòng mã để hiểu hơn)</p>
+      <script src="https://gist.github.com/hoctructuyencntt/b0395d0aef9f886a0faf186e76e4f3d1.js"></script>
+      <p>Gõ lệnh <i>node app.js</i> và truy cập http://localhost:3000/calculator để kiểm tra kết quả.</p>
+      <div class="w3-center">
+        <div class="pagination">
+          <a href="Bai03.html">Bài trước</a>
+          <a href="Bai05.html">Bài tiếp theo</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- End page content -->
+  </div>
+
+  <script>
+    function myTab(evt, tabName) {
+      var i, tabcontent, tablinks;
+
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(tabName).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+  </script>
+  <script>
+    // Script to open and close sidebar
+    function w3_open() {
+      document.getElementById("mySidebar").style.display = "block";
+      document.getElementById("myOverlay").style.display = "block";
+    }
+
+    function w3_close() {
+      document.getElementById("mySidebar").style.display = "none";
+      document.getElementById("myOverlay").style.display = "none";
+    }
+
+    // Phần button top
+    var mybutton = document.getElementById("myBtn");
+
+
+    window.onscroll = function () { scrollFunction() };
+
+    function scrollFunction() {
+      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        mybutton.style.display = "block";
+      } else {
+        mybutton.style.display = "none";
+      }
+    }
+
+
+    function topFunction() {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    }
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+<title>Bài 5: Xây dựng ứng dụng web hướng máy chủ</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="w3.css">
+<link rel="stylesheet" href="font.css">
+<link rel="stylesheet" href="font-awesome.min.css">
+<style>
+  .tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+  }
+
+  /* Style the buttons inside the tab */
+  .tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+  }
+
+  /* Change background color of buttons on hover */
+  .tab button:hover {
+    background-color: #ddd;
+  }
+
+  /* Create an active/current tablink class */
+  .tab button.active {
+    background-color: #ccc;
+  }
+
+  /* Style the tab content */
+  .tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+  }
+
+  i {
+    color: yellow;
+  }
+
+  #myBtn {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    z-index: 99;
+    font-size: 18px;
+    border: none;
+    outline: none;
+    background-color: pink;
+    color: black;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 4px;
+  }
+
+  #myBtn:hover {
+    background-color: #555;
+  }
+
+  .w3-main a {
+    background-color: red;
+  }
+
+  .pagination {
+    display: inline-block;
+  }
+
+  .pagination a {
+    color: white;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+    background-color: gray;
+  }
+
+  .pagination a.active {
+    background-color: gray;
+    color: white;
+    border: 1px solid #4CAF50;
+  }
+
+  .pagination a:hover:not(.active) {
+    background-color: #ddd;
+  }
+
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Raleway", sans-serif
+  }
+
+
+  table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  table td,
+  table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  /*
+  #tab tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+*/
+  table tr:hover {
+    background-color: #ddd;
+  }
+
+  table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #04AA6D;
+    color: white;
+  }
+
+  .center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
+
+  .w3-code a {
+    background-color: transparent;
+    text-decoration: none;
+    color: blue;
+  }
+
+  .video-container {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+
+  .video-container::after {
+    padding-top: 56.25%;
+    display: block;
+    content: '';
+  }
+
+  .video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<body class="w3-black w3-content" style="max-width:1600px">
+
+  <!-- Sidebar/menu -->
+  <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+    <div class="w3-container">
+      <a href="#" style="text-decoration: none;" onclick="w3_close()"
+        class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey" title="Đóng"> X </a>
+      <!--<h4><b>Giáo trình</b></h4>-->
+    </div>
+    <div class="w3-bar-block">
+      <a href="Bai01.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài 1: Giới thiệu
+        Node.js (NodeJS) và MongoDB</a>
+
+      <a href="Bai02.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài 2: Viết ứng dụng đầu tiên
+        với Node.js và MongoDB</a>
+
+      <a href="Bai03.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài 3: Các khái niệm và thao
+        tác cơ bản trong Node.js và MongoDB</a>
+      <a href="Baitap03.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài tập</a>
+      <a href="Bai04.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài 4: Xây dựng
+        web với nền
+        tảng Express (Express Framework)</a>
+      <a href="Baitap04.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài tập</a>
+      <a href="Bai05.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding w3-text-teal">Bài 5: Xây dựng
+        ứng dụng web
+        hướng máy chủ</a>
+      <a href="Baitap05.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài tập</a>
+      <a href="Bai06.html" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">Bài 6: Kiểm thử và triển
+        khai ứng dụng web</a>
+    </div>
+  </nav>
+
+  <!-- Overlay effect when opening sidebar on small screens -->
+  <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer"
+    title="close side menu" id="myOverlay">=</div>
+
+  <!-- !PAGE CONTENT! -->
+  <div class="w3-main" style="margin-left:300px">
+    <button onclick="topFunction()" id="myBtn" title="Go to top">Lên đầu trang</button>
+    <!-- Header -->
+    <header id="portfolio">
+      <!--<a href="#"><img src="/w3images/avatar_g2.jpg" style="width:65px;"
+          class="w3-circle w3-right w3-margin w3-hide-large w3-hover-opacity"></a>-->
+      <span class="w3-button w3-hide-large w3-xxlarge w3-hover-text-grey" onclick="w3_open()">=</span>
+      <div class="w3-container">
+        <h1><b>Bài 5: Xây dựng ứng dụng web hướng máy chủ</b></h1>
+        <div class="w3-section w3-bottombar"></div>
+      </div>
+    </header>
+
+    <div class="w3-container w3-padding-large" style="margin-bottom:32px">
+      <div class="w3-center">
+        <div class="pagination">
+          <a href="Bai04.html">Bài trước</a>
+          <a href="Bai06.html">Bài tiếp theo</a>
+        </div>
+      </div>
+      <div class="w3-code notranslate htmlHigh">
+        <h4>Nội dung bài học</h4>
+        <ol>
+          <li><a href="#muc1">Xây dựng ứng dụng web dùng Express và MongoDB</a>
+            <ul>
+              <li><a href="#muc1_1">Các bước xây dựng ứng dụng</a>
+              <li><a href="#muc1_2">Ứng dụng minh họa: Quản lý người dùng</a>
+            </ul>
+          </li>
+          <li><a href="#muc2">Tạo một RESTful API</a>
+            <ul>
+              <li><a href="#muc2_1">RESTful API là gì?</a>
+              <li><a href="#muc2_2">Cách tạo một RESTful API</a>
+              <li><a href="#muc2_3">Sử dụng một RESTful API</a>
+            </ul>
+          </li>
+        </ol>
+      </div>
+
+      <h1 id="muc1"><b>Xây dựng ứng dụng web dùng Express và MongoDB</b></h1>
+      <h3 id="muc1_1"><b>Các bước xây dựng ứng dụng</b></h3>
+      <p>Chúng ta đã tìm hiểu NodeJS, hệ quản trị MongoDB (<a
+          href="https://hoctructuyencntt.github.io/NodeJS/Bai03.html">Bài 3</a>), cách tạo ứng dụng với Express và mô
+        hình MVC (<a ref="https://hoctructuyencntt.github.io/NodeJS/Bai04.html">Bài 4</a>).
+        Trong nội dung này, chúng ta sẽ kết hợp tất cả lại với nhau để xây dựng ứng dụng dùng Express, tổ chức dự án
+        theo mô hình MVC và quản lý dữ liệu với MongoDB. Bao gồm các bước cơ bản sau:</p>
+      <h4>Bước 1: Chuẩn bị Môi trường</h4>
+      <p>Trước tiên, bạn cần cài đặt Node.js và MongoDB trên máy tính của mình. Bạn có thể tìm hướng dẫn cài đặt tại các
+        trang chính thức của Node.js và MongoDB.</p>
+
+      <h4>Bước 2: Tạo Thư mục Dự Án và Cài Đặt Dependencies</h4>
+      <ul>
+        <li>Tạo một thư mục mới cho dự án của bạn.
+        <li>Mở <i>Terminal</i> và điều hướng đến thư mục bạn vừa tạo.
+        <li>Chạy <i>npm init</i> để tạo tập tin <i>package.json</i> và nhập thông tin cho dự án của bạn.
+        <li>Cài đặt các dependency (Express, MongoDB, các template engine cần thiết).
+      </ul>
+      <h4>Bước 3: Thiết Lập Cấu trúc Dự Án MVC</h4>
+      <p>Tạo các thư mục cho mô hình MVC của bạn, ví dụ: models, views, controllers. Đây là nơi bạn sẽ lưu trữ các mô
+        hình,
+        các trang giao diện và các logic điều khiển.</p>
+
+      <h4>Bước 4: Thiết Lập Kết Nối với MongoDB</h4>
+      <p>Trong tập tin <i>app.js</i> hoặc <i>server.js</i>, kết nối với MongoDB sử dụng MongoDB Driver:</p>
+      <script src="https://gist.github.com/hoctructuyencntt/24d310fab4592dff1dc4a2268fb9926b.js"></script>
+      <h4>Bước 5: Định nghĩa Routes và Controllers</h4>
+      <p>Trong thư mục controllers, tạo các tập tin điều khiển (ví dụ: userController.js) để xử lý logic và trong thư
+        mục
+        routes, tạo các tập tin định tuyến (ví dụ: userRoutes.js) để xác định các tuyến dẫn của ứng dụng.</p>
+
+      <h4>Bước 6: Tạo giao diện trang dùng template engine (Pug, Handlebars,...)</h4>
+      <p>Trong thư mục views, tạo các tập tin Pug hay Handlebars,... để hiển thị nội dung trang web của bạn.</p>
+
+      <h4>Bước 7: Thiết Lập Express App</h4>
+      <p>Trong tập tin server.js hoặc app.js, thiết lập Express app và định tuyến:</p>
+      <script src="https://gist.github.com/hoctructuyencntt/b814f921bbbb0fc67522aef39d1be648.js"></script>
+      <h4>Bước 8: Bắt Đầu Phát triển</h4>
+      <p>Bắt đầu viết các model, routes, controllers và templates theo nhu cầu của dự
+        án của bạn.</p>
+      <h3 id="muc1_2"><b>Ứng dụng minh họa: Quản lý người dùng</b></h3>
+      <p>Trong ví dụ này, chúng ta sẽ tạo một ứng dụng cho phép thêm người dùng mới, xem danh sách người dùng và
+        xóa người dùng khỏi cơ sở dữ liệu MongoDB.</p>
+      <h4>1. Tạo thư mục dự án và cài đặt các thư viện cần thiết (dependencies)</h4>
+      <p>Tạo thư mục dự án tên <i>UserApp</i> và cài đặt các thư viện Express, MongoDB, Pug.</p>
+      <h4>2. Tạo cấu trúc thư mục dự án như sau:</h4>
+      <img class="center" src="img/bai5_01.png">
+      <p>Tạo các tập tin JS có ý nghĩa như sau:</p>
+      <ul>
+        <li><i>models/User.js</i>: Định nghĩa lớp người dùng làm mô hình (model) cho lượt đồ (schema) cơ sở dữ liệu
+          MongoDB.
+        <li><i>controllers/userController.js</i>: Chứa logic xử lý người dùng.
+        <li><i>routes/userRoutes.js</i>: Định tuyến cho các yêu cầu người dùng.
+        <li><i>views/</i>: Thư mục chứa các file Pug cho giao diện người dùng.
+        <li><i>app.js</i>: File chính của ứng dụng, nơi bạn thiết lập Express app và kết nối đến cơ sở dữ liệu MongoDB.
+      </ul>
+      <h4>3. Viết mã cho các tập tin JS đã tạo</h4>
+      <p><i>models/User.js</i></p>
+      <script src="https://gist.github.com/hoctructuyencntt/dffe29a3fd9d32b4ed798559edbd4c7c.js"></script>
+      <p><i>controllers/userController.js</i></p>
+      <script src="https://gist.github.com/hoctructuyencntt/c16ddbc7891d974d83b8f5d9d23383b6.js"></script>
+      <p><i>routes/userRoutes.js</i></p>
+      <script src="https://gist.github.com/hoctructuyencntt/36a47b0e383a5026edcc6105abc4f335.js"></script>
+      <p><i>views/user-list.pug</i></p>
+      <script src="https://gist.github.com/hoctructuyencntt/1dc45ddb6b427f79c9085a25d6c7c329.js"></script>
+      <p><i>app.js</i></p>
+      <script src="https://gist.github.com/hoctructuyencntt/ff90289eb72e92f8132cb9a1f5831d67.js"></script>
+      <h4>4. Kiểm tra ứng dụng</h4>
+      <p>Từ Terminal điều hướng đến thư mục dự án <i>UserApp</i> gõ lệnh: <i>node app.js</i></p>
+      <img class="center" src="img/bai5_02.png">
+      <p>Truy cập: http://localhost:3000/users</p>
+      <img class="center" src="img/bai5_03.png">
+      <p>Nhập thông tin người dùng:</p>
+      <img class="center" src="img/bai5_04.png">
+      <p>Nhấn nút Add User</p>
+      <img class="center" src="img/bai5_05.png">
+      <p>Nhấn nút Delete sẽ xóa người dùng. Các thông báo xuất hiện trên giao diện Terminal:</p>
+      <img class="center" src="img/bai5_06.png">
+      <p>Thao tác thêm người dùng hay xóa người dùng chúng ta có thể kiểm tra trực tiếp từ cơ sở dữ liệu. Để làm điều
+        này, chúng ta gõ lệnh <i>mongo</i> để đến giao diện <i>MongoDB shell</i> truy vấn cơ sở dữ liệu:</p>
+      <img class="center" src="img/bai5_07.png">
+      <p>Tại dấu ">" chúng ta truy cập đến cơ sở dữ liệu (trong ví dụ này là <i>userdb</i> chúng ta tạo trong
+        <i>app.js</i>) dùng lện: <i>&gt; use userdb</i>
+      </p>
+      <p>Chúng ta có thể kiểm tra các collections trong cơ sở dữ liệu: <i>&gt; show collections</i></p>
+      <p>Chúng ta có thể kiểm tra dữ liệu từ collection (users) trong cơ sở dữ liệu (userdb): <i>&gt;
+          db.users.find()</i>.</p>
+      <p>Giao diện MongoDB shell từ các lệnh:</p>
+      <img class="center" src="img/bai5_08.png">
+      <p>Thoát khỏi chế độ MongoDB shell dùng tổ hợp phím <i>Ctrl + C</i></p>
+      <h1 id="muc2"><b>Tạo một RESTful API</b></h1>
+      <h3 id="muc2_1"><b>RESTful API là gì?</b></h3>
+      <p>RESTful API (Representational State Transferful Application Programming Interface) là một kiến trúc thiết kế
+        cho
+        việc tạo và quản lý các giao tiếp giữa các hệ thống máy tính. Nó dựa trên các nguyên tắc cơ bản mà mỗi tài
+        nguyên
+        (resource) trong hệ thống được xác định bằng một URI (Uniform Resource Identifier). RESTful API sử dụng các
+        phương
+        thức HTTP như GET, POST, PUT, DELETE để thực hiện các thao tác trên các tài nguyên.</p>
+      <p>Dưới đây là các khía cạnh chính của RESTful API:</p>
+      <h4>1. Tài Nguyên (Resources)</h4>
+      <p>Tài nguyên là một đối tượng hoặc dịch vụ được quản lý bởi API. Mỗi tài nguyên có một định danh duy nhất (URI).
+        Ví
+        dụ: /users, /products,...</p>
+
+      <h4>2. Phương Thức HTTP</h4>
+      <p>RESTful API sử dụng các phương thức HTTP để thực hiện các thao tác trên các tài nguyên:</p>
+      <ul>
+        <li>GET: Lấy thông tin về một hoặc nhiều tài nguyên.
+        <li>POST: Tạo mới một tài nguyên.
+        <li>PUT: Cập nhật thông tin của một tài nguyên hoặc tạo một tài nguyên nếu nó không tồn tại.
+        <li>DELETE: Xóa một tài nguyên.
+      </ul>
+      <h4>3. Định Dạng Dữ Liệu</h4>
+      <p>Dữ liệu trao đổi giữa client và server thường được truyền dưới dạng JSON hoặc XML.</p>
+
+      <h4>4. Định Danh Tài Nguyên (URI)</h4>
+      <p>Mỗi tài nguyên được xác định bằng một URI duy nhất. URI không nên chứa các hành động (actions) hoặc trạng thái
+        (status). Ví dụ:</p>
+      <ul>
+        <li> Lấy danh sách người dùng: GET /users
+        <li>Lấy thông tin người dùng có ID là 1: GET /users/1
+        <li>Tạo mới người dùng: POST /users
+        <li>Cập nhật thông tin người dùng có ID là 1: PUT /users/1
+        <li>Xóa người dùng có ID là 1: DELETE /users/1
+      </ul>
+      <h4>5. Stateless (Không Lưu Trữ Trạng Thái)</h4>
+      <p>RESTful API là stateless, điều này có nghĩa là mỗi yêu cầu từ client đều chứa đủ thông tin để hiểu yêu cầu đó
+        mà
+        không cần lưu trữ trạng thái trước đó của client.</p>
+
+      <h4>6. HATEOAS (Hypermedia As The Engine Of Application State)</h4>
+      <p>HATEOAS là một khía cạnh quan trọng của RESTful API, cho phép server gửi các liên kết (URL) tới client, giúp
+        client biết được các hành động mà nó có thể thực hiện tiếp theo.</p>
+      <p>RESTful API cung cấp một cách tiếp cận linh hoạt và dễ mở rộng cho việc giao tiếp giữa các hệ thống. Nó thường
+        được sử dụng trong việc xây dựng các ứng dụng web, di động và dịch vụ web.</p>
+      <h3 id="muc2_2"><b>Cách tạo một RESTful API</b></h3>
+      <p>Các bước tạo một RESTful API tương tự cách tạo một ứng dụng dùng Express và MongoDB. Chúng ta sẽ viết một
+        RESTful API quản lý người dùng (thêm, xóa) để minh họa cách tạo một RESTful API.</p>
+      <p>Tạo thư mục dự án tên <i>UserRESTFULAPI</i> và cài đặt Express và MongoDB. Ở đây chúng ta sẽ truy cập đến cơ sở
+        dữ
+        liệu <i>userdb</i> đã tạo ở dự án <i>UserApp</i> ở trên. Cơ sở dữ
+        liệu <i>userdb</i> chứa collection tên <i>users</i> chứa dữ liệu chúng ta đã thêm từ bài <i>UserApp</i> (nếu đã
+        xóa thì
+        có thể mở ứng dụng và thêm lại):</p>
+      <img class="center" src="img/bai5_04.png">
+      <p>Tạo cấu trúc thư mục dự án <i>UserRESTFULAPI</i> tương tự dự án UserApp chỉ khác là chúng ta không cần thư mục
+        <i>views</i>:
+      </p>
+      <img class="center" src="img/bai5_10.png">
+      <p>Trong thư mục <i>models</i> tạo tập tin <i>dbConnection.js</i> có nội dung:</p>
+      <script src="https://gist.github.com/hoctructuyencntt/b4e3984febd0a725f7dd3885d8a838e5.js"></script>
+      <p>Trong thư mục <i>controllers</i> tạo tập tin <i>userController.js</i> có nội dung:</p>
+      <script src="https://gist.github.com/hoctructuyencntt/c9e2b6c31270fa1157126acbfc49a35d.js"></script>
+      <p>Trong thư mục <i>routes</i> tạo tập tin <i>userRoutes.js</i> có nội dung:</p>
+      <script src="https://gist.github.com/hoctructuyencntt/9e6465921494309c126b50d5af2af9ae.js"></script>
+      <p>Nội dung tập tin app.js:</p>
+      <script src="https://gist.github.com/hoctructuyencntt/e0c3437a3c1a37545a31a97711fde473.js"></script>
+      <p>Như vậy chúng ta đã hoàn tất việc tạp một RESTful API đơn giản. Bây giờ chúng ta sẽ tìm hiểu cách sử dụng API
+        này.</p>
+      <h3 id="muc2_3"><b>Sử dụng một RESTful API</b></h3>
+      <p>Có hai cách để kiểm tra hay dùng một RESTful API:</p>
+      <ul>
+        <li>Dùng các công cụ như <a href="https://www.postman.com/">Postman</a> hay <a href="https://curl.se/">cURL</a>.
+        <li>Tạo một ứng dụng kiểm tra hay dùng RESTful API.
+      </ul>
+      <h4><b>Sử dụng công cụ Postman</b></h4>
+      <p>Trong dự án này chúng ta sẽ dùng Postman để kiểm tra RESTful API. Truy cập <a
+          href="https://www.postman.com/downloads/">postman.com</a> để tải
+        và cài Postman.
+        Mở Postman, đăng nhập (tạo tài khỏan hay đăng nhập qua Google), thực hiện vài câu hỏi sẽ đến giao diện sau:
+        <img class="center" src="img/bai5_09.png">
+      <p>Tạo một yêu cầu mới bằng cách nhấn vào dấu + bên phải mục Requests</p>
+      <img class="center" src="img/bai5_11.png">
+      <p>Chọn phương thức GET và nhập đường dẫn <i>http://localhost:3000/api/users</i> đến ô URL:</p>
+      <img class="center" src="img/bai5_12.png">
+      <p>Trước khi nhấn nút Send màu xanh bên phải, chúng ta cần trở lại Terminal điều hướng đến thư mục
+        <i>UserRESTFULAPI</i> và gõ lệnh <i>node app.js</i>. Nhấn nút Send từ Postman và xem kết quả:
+      </p>
+      <img class="center" src="img/bai5_13.png">
+      <p>Chúng ta sẽ tạo mới một người dùng bằng cách chọn phương thức POST từ Postman. Chọn phương thức POST, nhập
+        đường dẫn <i>http://localhost:3000/api/users</i> đến ô URL, chọn tab <i>Body</i>, chọn <i>raw</i>, trong mục
+        <i>Text</i> chọn <i>JSON</i>:
+      </p>
+      <img class="center" src="img/bai5_14.png">
+      <p>Nhập dữ liệu người dùng mới trong ô nội dung:</p>
+      <div class="w3-code notranslate htmlHigh">
+        {<br>
+        &nbsp;&nbsp;"name":"Dung",<br>
+        &nbsp;&nbsp;"email":"dung@email.com"<br>
+        }
+      </div>
+      <p>Hình ảnh từ Postman:</p>
+      <img class="center" src="img/bai5_15.png">
+      <p>Từ Terminal gõ lệnh <i>node app</i> và nhấn nút Send từ Postman. Nếu thành công:</p>
+      <img class="center" src="img/bai5_16.png">
+      <p>Lúc này có thể dùng phương thức GET để kiểm tra hay dùng lệnh <i>mongo</i> từ Terminal để kiểm tra trực tiếp cơ
+        sở dữ liệu.</p>
+      <p>Chúng ta cũng có thể xóa hay cập nhật dữ liệu người dùng:</p>
+      <ul>
+        <li>Xóa người dùng: Chọn phương thức DELETE và nhập đường dẫn <i>http://localhost:3000/api/users/id</i> (thay id
+          bằng id người dùng muốn xóa) đến ô URL.
+        <li>Cập nhật thông tin người dùng: Chọn phương thức PUT và nhập đường dẫn
+          <i>http://localhost:3000/api/users/id</i> (thay id
+          bằng id người dùng muốn thay đổi thông tin) đến ô URL.
+      </ul>
+      <p>Các phương thức khác có thể tham khảo từ <a
+          href="https://learning.postman.com/docs/introduction/overview/">Postman</a>.</p>
+      <h4><b>Tạo một ứng dụng kiểm tra hay dùng RESTful API</b></h4>
+      <p>Một cách khác thay vì dùng các công cụ như Postman, chúng ta có thể tạo ứng dụng để kiểm tra một RESTFUL API.
+        Tuy nhiên, khi truy cập một RESTFUL API trên <i>localhost</i> chúng ta sẽ gặp một số vấn đề liên quan đến <a
+          href="https://topdev.vn/blog/cors-la-gi/">CORS</a>
+        từ các trình duyệt. Để khắc phục vấn đề này, chúng ta cần cài middleware <i>cors</i> trong thư mục dự án API
+        cũng như thư mục ứng dụng kiểm tra API.</p>
+      <p>Mở thư mục dự án UserRESTFULAPI từ Terminal và gõ lệnh: <i>npm install cors</i></p>
+      <p>Tìm đến thư mục UserRESTFULAPI, mở tập tin <i>app.js</i> và bổ sung dòng mã cho phép ứng dụng
+        truy
+        cập CORS:</p>
+      <div class="w3-code notranslate htmlHigh">
+        const express = require('express');<br>
+        const app = express();<br>
+        const userRoutes = require('./routes/userRoutes');<br>
+        const cors = require('cors');<br>
+        app.use(cors());<br>
+        ...
+      </div>
+      <p>Kế tiếp, tạo thư mục dự án ứng dụng kiểm tra API tên TestRESTFULAPI chứa thư mục tên <i>public</i>. Cài đặt
+        Cors và Express đến thư mục này.</p>
+      <p>Tạo tập tin app.js có nội dung như sau:</p>
+      <script src="https://gist.github.com/hoctructuyencntt/6213fd1608c68086dc092358204410a9.js"></script>
+      <p>Trong thư mục public tạo tập tin index.html có nội dung sau:</p>
+      <script src="https://gist.github.com/hoctructuyencntt/a0442dace11765a4deec132af0681021.js"></script>
+      <p>Từ Terminal điều hướng đến thư mục UserRESTFULAPI và gõ lệnh <i>node app</i>. (Lúc này API được mở trên cổng
+        3000)</p>
+      <p>Chọn New Terminal để mở cửa sổ Terminal thứ hai và điều hướng đến thư mục TestRESTFULAPI. Gõ lệnh <i>node
+          app</i>.Truy cập http://localhost:3001/ và nhấn nút Get User:</p>
+      <img class="center" src="img/bai5_17.png">
+      <p>Nhập thông tin đến Name và Email: </p>
+      <img class="center" src="img/bai5_18.png">
+      <p>Nhấn nút Create User</p>
+      <img class="center" src="img/bai5_19.png">
+      <p>Nhấn F5 và nhấn nút Get User trở lại:</p>
+      <img class="center" src="img/bai5_20.png">
+      <p>Bôi đen và copy giá trị _id (không lấy dấu nháy) của user vừa thêm (Messi) dán vào ô User ID. Nhất nút Delete
+        User, F5 và nhấn nút
+        Get User trở lại xem kết quả.</p>
+      <p>Bôi đen và copy giá trị _id (không lấy dấu nháy) của user có name là "Dung" dán vào ô User ID, nhập các thông
+        tin mới đến ô Name và Email. Nhất nút Update User, F5 và nhấn nút
+        Get User trở lại xem kết quả.</p>
+
+      <div class="w3-center">
+        <div class="pagination">
+          <a href="Bai04.html">Bài trước</a>
+          <a href="Bai06.html">Bài tiếp theo</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- End page content -->
+  </div>
+
+  <script>
+    function myTab(evt, tabName) {
+      var i, tabcontent, tablinks;
+
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(tabName).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+  </script>
+  <script>
+    // Script to open and close sidebar
+    function w3_open() {
+      document.getElementById("mySidebar").style.display = "block";
+      document.getElementById("myOverlay").style.display = "block";
+    }
+
+    function w3_close() {
+      document.getElementById("mySidebar").style.display = "none";
+      document.getElementById("myOverlay").style.display = "none";
+    }
+
+    // Phần button top
+    var mybutton = document.getElementById("myBtn");
+
+
+    window.onscroll = function () { scrollFunction() };
+
+    function scrollFunction() {
+      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        mybutton.style.display = "block";
+      } else {
+        mybutton.style.display = "none";
+      }
+    }
+
+
+    function topFunction() {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    }
+  </script>
+
+</body>
+
+</html>
